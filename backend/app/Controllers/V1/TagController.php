@@ -7,7 +7,7 @@ namespace App\Controllers\V1;
 use App\Controllers\Controller;
 use App\Models\Tag;
 use App\Models\User;
-use App\Requests\Bookmark\CreateBookmarkRequest;
+use App\Requests\Tag\CreateTagRequest;
 use App\Resources\TagResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -24,7 +24,7 @@ class TagController extends Controller
         return TagResource::collection($userTags);
     }
 
-    public function store(CreateBookmarkRequest $request): TagResource
+    public function store(CreateTagRequest $request): TagResource
     {
         /** @var User $user */
         $user = $request->user();
