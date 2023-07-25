@@ -16,5 +16,7 @@ Route::controller(BookmarkController::class)->middleware('auth:sanctum')->prefix
 
 Route::controller(TagController::class)->middleware('auth:sanctum')->prefix('/v1')
     ->group(function () {
-//        Route::get('/bookmarks', 'index');
+        Route::get('/tags', 'index');
+        Route::post('/tags', 'store');
+        Route::delete('/tags/{id}', 'destroy');
     });
