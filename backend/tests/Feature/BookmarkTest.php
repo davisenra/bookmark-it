@@ -91,4 +91,78 @@ class BookmarkTest extends TestCase
         $response->assertOk();
         $response->assertJsonCount(2, 'data');
     }
+
+    public function test_user_can_create_bookmark()
+    {
+        $user = $this->login();
+
+        $response = $this->postJson(self::BASE_ENDPOINT, [
+            'title' => 'Very important bookmark',
+            'url' => 'https://veryimportantwebsite.com',
+        ]);
+
+        $response->assertCreated();
+        $response->assertJsonPath('data.title', 'Very important bookmark');
+        $response->assertJsonPath('data.url', 'https://veryimportantwebsite.com');
+
+        $this->assertCount(1, $user->bookmarks);
+    }
+
+    public function test_create_bookmark_validation()
+    {
+        $this->login();
+
+        $this->postJson(self::BASE_ENDPOINT, ['title' => 'Very important bookmark'])
+            ->assertStatus(422)
+            ->assertJsonPath('message', 'The url field is required.');
+
+        $this->postJson(self::BASE_ENDPOINT, ['url' => 'https://veryimportantwebsite.com'])
+            ->assertStatus(422)
+            ->assertJsonPath('message', 'The title field is required.');
+    }
+
+    public function test_bookmark_can_be_marked_as_visited()
+    {
+        $user = $this->login();
+        $bookmark = Bookmark::factory()->make();
+        $bookmark->visited_at = null;
+        $bookmark->user()->associate($user);
+        $bookmark->save();
+
+        $endpoint = sprintf('%s/%s/visited', self::BASE_ENDPOINT, $bookmark->id);
+
+        $this->patchJson($endpoint)
+            ->assertNoContent();
+
+        $this->getJson(self::BASE_ENDPOINT . "/{$bookmark->id}")
+            ->assertOk()
+            ->assertJsonPath('data.visited', true);
+    }
+
+    public function test_bookmark_can_be_deleted()
+    {
+        $user = $this->login();
+        $bookmark = $user->bookmarks()->save(Bookmark::factory()->make());
+
+        $this->deleteJson(self::BASE_ENDPOINT . "/{$bookmark->id}")
+            ->assertNoContent();
+
+        $this->assertCount(0, $user->bookmarks);
+    }
+
+    public function test_bookmark_can_be_updated()
+    {
+        $user = $this->login();
+        $bookmark = $user->bookmarks()->save(Bookmark::factory()->make());
+
+        $payload = [
+            'title' => 'A new title',
+            'description' => 'A new description',
+        ];
+
+        $this->postJson(self::BASE_ENDPOINT . "/{$bookmark->id}", $payload)
+            ->assertOk()
+            ->assertJsonPath('data.title', $payload['title'])
+            ->assertJsonPath('data.description', $payload['description']);
+    }
 }
