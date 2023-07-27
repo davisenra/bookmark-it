@@ -10,7 +10,15 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
+    "@nuxtjs/tailwindcss": "^6.8.0",
+    "@tailwindcss/typography": "^0.5.9",
     "@types/node": "^18.17.0",
-    "nuxt": "^3.6.5"
+    "daisyui": "^3.5.0",
+    "nuxt": "^3.6.5",
+    "nuxt-icon": "^0.4.2"
+  },
+  "dependencies": {
+    "@pinia/nuxt": "^0.4.11",
+    "pinia": "^2.1.6"
   }
 }
