@@ -21,6 +21,10 @@ class Bookmark extends Model
         'visited_at',
     ];
 
+    protected $casts = [
+        'visited_at' => 'datetime',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
