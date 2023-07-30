@@ -17,7 +17,7 @@ class BookmarkTest extends TestCase
     use RefreshDatabase;
     use RequiresAuthentication;
 
-    public const BASE_ENDPOINT = 'api/v1/bookmarks';
+    public const BASE_ENDPOINT = '/v1/bookmarks';
 
     public function test_all_endpoints_requires_authentication()
     {

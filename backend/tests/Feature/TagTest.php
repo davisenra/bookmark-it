@@ -14,7 +14,7 @@ class TagTest extends TestCase
     use RefreshDatabase;
     use RequiresAuthentication;
 
-    public const BASE_ENDPOINT = 'api/v1/tags';
+    public const BASE_ENDPOINT = '/v1/tags';
 
     public function test_all_endpoints_requires_authentication()
     {
