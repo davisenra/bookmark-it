@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="navbar bg-base-200">
+  <div class="navbar shadow">
     <div class="navbar-start">
       <div class="dropdown">
         <label tabindex="0" class="btn btn-square btn-ghost">
@@ -13,12 +13,12 @@
         >
           <li>
             <NuxtLink to="/" class="text-lg">
-              <Icon name="ph:house" />Home
+              <Icon name="ph:house" /> Home
             </NuxtLink>
           </li>
           <li>
             <NuxtLink to="/login" class="text-lg">
-              <Icon name="ph:sign-out" />Logout
+              <Icon name="ph:sign-out" /> Logout
             </NuxtLink>
           </li>
         </ul>

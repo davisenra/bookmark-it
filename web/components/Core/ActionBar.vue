@@ -8,5 +8,8 @@
     <NuxtLink to="/new-bookmark" active-class="active">
       <Icon name="ph:plus-circle-bold" size="32" />
     </NuxtLink>
+    <NuxtLink to="/tags" active-class="active">
+      <Icon name="ph:tag-bold" size="32" />
+    </NuxtLink>
   </div>
 </template>

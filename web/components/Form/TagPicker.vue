@@ -1,8 +1,5 @@
 <script setup lang="ts">
-type Tag = {
-  id: number;
-  name: string;
-};
+import { Tag } from "types/types";
 
 const availableTags: Ref<Tag[]> = ref([
   { id: 1, name: "PHP" },
@@ -41,8 +38,7 @@ function isTagPicked(tag: Tag) {
       type="button"
       class="btn btn-sm rounded-full"
       :class="{
-        'bg-primary text-primary-content hover:bg-primary-focus':
-          isTagPicked(tag),
+        'bg-accent text-accent-content hover:bg-accent-focus': isTagPicked(tag),
       }"
       v-for="tag in availableTags"
       :key="tag.id"
