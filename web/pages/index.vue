@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { Bookmark } from "types/types";
 
+definePageMeta({
+  middleware: "auth",
+});
+
 const bookmarks: Bookmark[] = [
   {
     id: "06824b38-4263-46ab-a2e2-0ce3720e00b6",

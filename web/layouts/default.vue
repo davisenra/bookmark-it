@@ -1,9 +1,6 @@
 <template>
-  <div class="flex min-h-screen flex-col">
+  <CoreSidebar>
     <CoreNavbar />
-    <div class="flex-grow">
-      <slot />
-    </div>
-    <CoreActionBar />
-  </div>
+    <slot />
+  </CoreSidebar>
 </template>

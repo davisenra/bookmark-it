@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+definePageMeta({
+  middleware: "auth",
+});
+</script>
 
 <template>
   <div class="container mx-auto mt-6 flex flex-col space-y-6 px-3">

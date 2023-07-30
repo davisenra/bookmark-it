@@ -16,14 +16,18 @@ const { bookmark } = defineProps<{ bookmark: Bookmark }>();
       <div>
         <div
           v-if="bookmark.description"
-          class="tooltip"
-          :data-tip="bookmark.description"
+          class="dropdown dropdown-end dropdown-hover"
         >
-          <button class="btn btn-square btn-ghost btn-sm">
+          <label tabindex="0" class="btn btn-square btn-ghost btn-sm m-1">
             <Icon name="ph:info" size="24" />
-          </button>
+          </label>
+          <div
+            class="dropdown-content rounded-box z-[1] w-52 bg-base-100 p-3 shadow"
+          >
+            <p class="prose-sm">{{ bookmark.description }}</p>
+          </div>
         </div>
-        <div class="dropdown dropdown-hover">
+        <div class="dropdown-end dropdown-hover dropdown">
           <label tabindex="0" class="btn btn-square btn-ghost btn-sm m-1">
             <Icon name="ph:dots-three-outline-vertical-fill" size="20" />
           </label>

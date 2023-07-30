@@ -3,26 +3,12 @@
 <template>
   <div class="navbar shadow">
     <div class="navbar-start">
-      <div class="dropdown">
-        <label tabindex="0" class="btn btn-square btn-ghost">
-          <Icon name="ic:baseline-menu" size="24" />
-        </label>
-        <ul
-          tabindex="0"
-          class="menu dropdown-content rounded-box menu-sm z-[1] mt-3 w-52 bg-base-100 p-2 shadow"
-        >
-          <li>
-            <NuxtLink to="/" class="text-lg">
-              <Icon name="ph:house" /> Home
-            </NuxtLink>
-          </li>
-          <li>
-            <NuxtLink to="/login" class="text-lg">
-              <Icon name="ph:sign-out" /> Logout
-            </NuxtLink>
-          </li>
-        </ul>
-      </div>
+      <label
+        for="sidebar-drawer"
+        class="btn btn-square btn-ghost drawer-button"
+      >
+        <Icon name="ic:baseline-menu" size="24" />
+      </label>
     </div>
     <div class="navbar-center space-x-1">
       <NuxtLink to="/" class="btn btn-ghost flex items-center">
@@ -30,6 +16,10 @@
         <p class="text-xl normal-case">Bookmark It</p>
       </NuxtLink>
     </div>
-    <div class="navbar-end"></div>
+    <div class="navbar-end">
+      <NuxtLink to="/new-bookmark" class="btn btn-primary">
+        <Icon name="ph:bookmark-simple-fill" size="18" /> New bookmark
+      </NuxtLink>
+    </div>
   </div>
 </template>
