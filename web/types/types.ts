@@ -14,3 +14,7 @@ export type Bookmark = {
   created_at: string;
   updated_at: string;
 };
+
+export type TagResponse = {
+  data: Tag[];
+};

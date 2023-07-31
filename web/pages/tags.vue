@@ -14,6 +14,7 @@ definePageMeta({
     <div>
       <h1 class="prose-2xl font-bold">Tags</h1>
       <div class="divider my-2"></div>
+      <TagTableList />
     </div>
   </div>
 </template>

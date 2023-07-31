@@ -23,6 +23,11 @@ async function handleLogout(): Promise<void> {
         </li>
         <li>
           <NuxtLink to="/tags" class="text-lg font-semibold">
+            <Icon name="ph:bookmark-bold" /> Bookmarks
+          </NuxtLink>
+        </li>
+        <li>
+          <NuxtLink to="/tags" class="text-lg font-semibold">
             <Icon name="ph:tag-bold" /> Tags
           </NuxtLink>
         </li>
