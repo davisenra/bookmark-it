@@ -9,17 +9,17 @@ use App\Models\Tag;
 use App\Models\User;
 use App\Requests\Tag\CreateTagRequest;
 use App\Resources\TagResource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 
 class TagController extends Controller
 {
-    public function index(Request $request): AnonymousResourceCollection
+    public function index(Request $request): JsonResource
     {
         /** @var User $user */
         $user = $request->user();
-        $userTags = $user->tags;
+        $userTags = Tag::where(['user_id' => $user->id])->paginate();
 
         return TagResource::collection($userTags);
     }

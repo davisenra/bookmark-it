@@ -14,7 +14,7 @@ class BookmarkSeeder extends Seeder
     public function run(): void
     {
         foreach (User::all() as $user) {
-            $bookmarks = Bookmark::factory(10)->make();
+            $bookmarks = Bookmark::factory(50)->make();
             $tags = $user->tags->toArray();
 
             foreach ($bookmarks as $bookmark) {
