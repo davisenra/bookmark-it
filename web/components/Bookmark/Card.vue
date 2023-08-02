@@ -1,7 +1,19 @@
 <script setup lang="ts">
+import { useBookmarkStore } from "@/stores/bookmark";
 import { Bookmark } from "types/types";
 
 const { bookmark } = defineProps<{ bookmark: Bookmark }>();
+const bookmarkStore = useBookmarkStore();
+
+async function handleMarkBookmarkAsVisited(id: string): Promise<void> {
+  await bookmarkStore.markBookmarkAsVisited(id);
+  await bookmarkStore.fetchBookmarks();
+}
+
+async function handleDelete(id: string): Promise<void> {
+  await bookmarkStore.deleteBookmark(id);
+  await bookmarkStore.fetchBookmarks();
+}
 </script>
 
 <template>
@@ -10,7 +22,7 @@ const { bookmark } = defineProps<{ bookmark: Bookmark }>();
     :class="[bookmark.visited ? 'border-t-success' : 'border-t-base']"
   >
     <div class="flex flex-grow justify-between">
-      <p class="prose-lg font-bold">
+      <p class="prose-lg w-3/4 font-bold">
         {{ bookmark.title }}
       </p>
       <div>
@@ -27,31 +39,23 @@ const { bookmark } = defineProps<{ bookmark: Bookmark }>();
             <p class="prose-sm">{{ bookmark.description }}</p>
           </div>
         </div>
-        <div class="dropdown-end dropdown-hover dropdown">
-          <label tabindex="0" class="btn btn-square btn-ghost btn-sm m-1">
-            <Icon name="ph:dots-three-outline-vertical-fill" size="20" />
-          </label>
-          <ul
-            tabindex="0"
-            class="menu dropdown-content rounded-box z-[1] w-52 bg-base-100 p-2 shadow"
-          >
-            <li>
-              <button>
-                <Icon name="ph:check-bold" size="18" />Mark as visited
-              </button>
-            </li>
-            <li>
-              <button><Icon name="ph:trash" size="18" />Remove</button>
-            </li>
-          </ul>
-        </div>
       </div>
     </div>
     <div class="my-3 flex flex-wrap gap-2">
       <BookmarkTagBadge v-for="tag in bookmark.tags" :key="tag.id" :tag="tag" />
     </div>
-    <a class="btn btn-ghost btn-sm w-max" :href="bookmark.url" target="_blank">
-      <Icon name="ph:link" size="18" />Visit
-    </a>
+    <div class="flex items-center justify-between">
+      <a
+        class="btn btn-ghost btn-sm w-max"
+        :href="bookmark.url"
+        target="_blank"
+      >
+        <Icon name="ph:link" size="18" />Visit
+      </a>
+      <div class="flex items-center justify-between space-x-2">
+        <ButtonConfirm @confirm="handleMarkBookmarkAsVisited(bookmark.id)" />
+        <ButtonDelete @delete="handleDelete(bookmark.id)" />
+      </div>
+    </div>
   </div>
 </template>

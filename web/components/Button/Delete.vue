@@ -16,17 +16,11 @@ function startDeleteTimer(): void {
 
 <template>
   <div>
-    <button
-      v-if="!confirmDelete"
-      @click="handleClick"
-      class="btn btn-error btn-sm"
-    >
+    <button v-if="!confirmDelete" @click="handleClick" class="btn btn-sm">
       <Icon name="ph:trash-bold" />
     </button>
-    <span v-else>
-      <button @click="emit('delete')" class="btn btn-error btn-sm">
-        <Icon name="ph:check-bold" />
-      </button>
-    </span>
+    <button v-else @click="emit('delete')" class="btn btn-error btn-sm">
+      <Icon name="ph:check-bold" />
+    </button>
   </div>
 </template>

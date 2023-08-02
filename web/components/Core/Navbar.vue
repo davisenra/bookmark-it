@@ -10,7 +10,7 @@
         <Icon name="ic:baseline-menu" size="24" />
       </label>
     </div>
-    <div class="navbar-center space-x-1">
+    <div class="navbar-center">
       <NuxtLink to="/" class="btn btn-ghost flex items-center">
         <Icon name="ph:book-bookmark-bold" size="24" />
         <p class="text-xl normal-case">Bookmark It</p>
@@ -18,7 +18,8 @@
     </div>
     <div class="navbar-end">
       <NuxtLink to="/new-bookmark" class="btn btn-primary">
-        <Icon name="ph:bookmark-simple-fill" size="18" /> New bookmark
+        <Icon name="ph:bookmark-simple-fill" size="18" />
+        <span class="hidden sm:block">New bookmark</span>
       </NuxtLink>
     </div>
   </div>

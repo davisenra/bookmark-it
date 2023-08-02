@@ -26,11 +26,11 @@ async function handleTagDelete(id: number): Promise<void> {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="tag in tagStore.tags" :key="tag.id" class="hover">
+        <tr v-for="tag in tagStore.getTags" :key="tag.id" class="hover">
           <th>{{ tag.id }}</th>
           <td>{{ tag.name }}</td>
           <td>
-            <FormDeleteButton @delete="handleTagDelete(tag.id)" />
+            <ButtonDelete @delete="handleTagDelete(tag.id)" />
           </td>
         </tr>
       </tbody>

@@ -1,6 +1,33 @@
+type ApiResponseMetada = {
+  links: {
+    first: string;
+    last: string;
+    prev: string | null;
+    next: string | null;
+  };
+  meta: {
+    current_page: number;
+    from: number;
+    last_page: number;
+    links: {
+      url: string | null;
+      label: string;
+      active: boolean;
+    }[];
+    path: string;
+    per_page: number;
+    to: number;
+    total: number;
+  };
+};
+
 export type Tag = {
   id: number;
   name: string;
+};
+
+export type TagResponse = ApiResponseMetada & {
+  data: Tag[];
 };
 
 export type Bookmark = {
@@ -15,6 +42,6 @@ export type Bookmark = {
   updated_at: string;
 };
 
-export type TagResponse = {
-  data: Tag[];
+export type BookmarkResponse = ApiResponseMetada & {
+  data: Bookmark[] | [];
 };

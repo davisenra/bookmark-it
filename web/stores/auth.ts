@@ -12,8 +12,11 @@ export const useAuthStore = defineStore(
     async function login(credentials: {
       email: string;
       password: string;
+      remember?: boolean;
     }): Promise<void> {
       await csrfToken();
+
+      credentials.remember = true;
 
       const res = await useApiFetch(`/login`, {
         method: "POST",
