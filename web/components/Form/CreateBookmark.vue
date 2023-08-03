@@ -1,19 +1,36 @@
 <script setup lang="ts">
-const bookmark = ref({
+import { CreateBookmarkPayload, useBookmarkStore } from "@/stores/bookmark";
+
+const bookmarkStore = useBookmarkStore();
+
+const bookmark = ref<CreateBookmarkPayload>({
   title: "",
   url: "",
   description: "",
   tags: [],
 });
 
-function handleBookmarkCreation() {}
+const isSending = ref(false);
+
+async function handleBookmarkCreation(): Promise<void> {
+  isSending.value = true;
+
+  try {
+    await bookmarkStore.createBookmark(bookmark.value);
+    navigateTo("/bookmarks");
+  } catch (e) {
+    console.error(e);
+  }
+
+  isSending.value = false;
+}
 
 function generateTitle(): void {
   try {
     const newTitle = useTitleGenerator(bookmark.value.url);
     bookmark.value.title = newTitle;
   } catch (e) {
-    return;
+    console.error(e);
   }
 }
 </script>
@@ -44,6 +61,7 @@ function generateTitle(): void {
         />
         <button
           class="btn btn-circle btn-ghost btn-sm fixed -ml-10 mt-2"
+          type="button"
           @click="generateTitle"
         >
           <Icon name="ph:lightbulb" />
@@ -67,7 +85,9 @@ function generateTitle(): void {
       <FormTagPicker :picked-tags-bag="bookmark.tags" />
     </div>
     <button type="submit" class="btn btn-primary my-3">
-      <Icon name="ph:floppy-disk-bold" size="20" /> Save
+      <Icon v-if="!isSending" name="ph:floppy-disk-bold" size="20" />
+      <span v-else class="loading loading-spinner"></span>
+      Save
     </button>
   </form>
 </template>

@@ -1,13 +1,20 @@
 import { defineStore } from "pinia";
-import { Bookmark, BookmarkResponse } from "@/types/types";
+import { Tag, BookmarkResponse } from "@/types/types";
 
-type FetchBookmarksOptions = {
+export type FetchBookmarksOptions = {
   visitedOnly?: 0 | 1;
   page?: number;
   perPage?: number;
   sortBy?: string;
   sortDirection?: "asc" | "desc";
   tag?: string;
+};
+
+export type CreateBookmarkPayload = {
+  title: string;
+  url: string;
+  description: string | undefined;
+  tags: Tag[];
 };
 
 export const useBookmarkStore = defineStore("bookmark", () => {
@@ -41,6 +48,27 @@ export const useBookmarkStore = defineStore("bookmark", () => {
     }
   }
 
+  async function createBookmark(payload: CreateBookmarkPayload): Promise<void> {
+    const tagsToApi = payload.tags.map((tag) => {
+      return {
+        id: tag.id,
+      };
+    });
+
+    try {
+      await useApiFetch(`/v1/bookmarks`, {
+        method: "POST",
+        body: JSON.stringify({
+          ...payload,
+          ...(payload.description === "" && { description: undefined }),
+          tags: tagsToApi,
+        }),
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   async function deleteBookmark(id: string): Promise<void> {
     await useApiFetch(`/v1/bookmarks/${id}`, {
       method: "DELETE",
@@ -58,6 +86,7 @@ export const useBookmarkStore = defineStore("bookmark", () => {
     getUnvisitedBookmarks,
     getMetada,
     fetchBookmarks,
+    createBookmark,
     deleteBookmark,
     markBookmarkAsVisited,
   };

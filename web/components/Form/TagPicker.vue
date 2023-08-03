@@ -1,18 +1,11 @@
 <script setup lang="ts">
 import { Tag } from "types/types";
+import { useTagStore } from "@/stores/tag";
 
-const availableTags: Ref<Tag[]> = ref([
-  { id: 1, name: "PHP" },
-  { id: 2, name: "Tech" },
-  { id: 3, name: "History" },
-  { id: 4, name: "Shopping" },
-  { id: 5, name: "Gaming" },
-  { id: 6, name: "Javascript" },
-  { id: 7, name: "Geography" },
-  { id: 8, name: "Books" },
-  { id: 9, name: "Youtube" },
-  { id: 10, name: "Reddit" },
-]);
+const tagStore = useTagStore();
+await tagStore.fetchTags();
+
+const availableTags: Ref<Tag[] | undefined> = ref(tagStore.getTags);
 
 const { pickedTagsBag } = defineProps<{ pickedTagsBag: Tag[] }>();
 
@@ -46,5 +39,8 @@ function isTagPicked(tag: Tag) {
     >
       {{ tag.name }}
     </button>
+    <p v-if="availableTags === undefined" class="prose-sm">
+      Looks like you have no tags :(
+    </p>
   </div>
 </template>
