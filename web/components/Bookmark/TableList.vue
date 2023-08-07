@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { Bookmark } from "@/types/types";
+import { useBookmarkStore } from "@/stores/bookmark";
+
+const bookmarkStore = useBookmarkStore();
 
 defineProps<{
   bookmarks: Bookmark[];
 }>();
+
+defineEmits(["update"]);
 </script>
 
 <template>
@@ -15,7 +20,7 @@ defineProps<{
           <th>Title</th>
           <th>Visited</th>
           <th>Tags</th>
-          <th>Created at</th>
+          <th>Visited at</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -47,14 +52,34 @@ defineProps<{
               <Icon name="ph:x-bold" />
             </div>
           </td>
-          <td class="my-auto flex flex-wrap gap-2">
+          <td class="space-x-2">
             <BookmarkTagBadge :tag="bookmark.tags[0]" />
             <div v-if="bookmark.tags.length > 1" class="badge badge-secondary">
               +{{ bookmark.tags.length }}
             </div>
           </td>
           <td>
-            {{ new Date(bookmark.visited_at).toDateString() }}
+            {{
+              bookmark.visited_at
+                ? new Date(bookmark.visited_at).toDateString()
+                : ""
+            }}
+          </td>
+          <td>
+            <div class="flex space-x-2">
+              <ButtonConfirm
+                @confirm="
+                  bookmarkStore.markBookmarkAsVisited(bookmark.id);
+                  $emit('update');
+                "
+              />
+              <ButtonDelete
+                @delete="
+                  bookmarkStore.deleteBookmark(bookmark.id);
+                  $emit('update');
+                "
+              />
+            </div>
           </td>
         </tr>
       </tbody>

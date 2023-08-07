@@ -10,7 +10,7 @@ async function handleLogout(): Promise<void> {
 <template>
   <div class="drawer">
     <input id="sidebar-drawer" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-content overflow-x-scroll">
+    <div class="drawer-content">
       <slot />
     </div>
     <div class="drawer-side">

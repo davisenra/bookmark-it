@@ -2,7 +2,10 @@
 import { useTagStore } from "@/stores/tag";
 
 const tagStore = useTagStore();
-await tagStore.fetchTags();
+
+onMounted(() => {
+  tagStore.fetchTags();
+});
 
 async function handleTagDelete(id: number): Promise<void> {
   await tagStore.deleteTag(id);

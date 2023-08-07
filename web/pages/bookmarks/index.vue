@@ -6,11 +6,16 @@ definePageMeta({
 });
 
 const currentPage = ref(1);
-
 const bookmarkStore = useBookmarkStore();
 
-await bookmarkStore.fetchBookmarks({
-  page: currentPage.value,
+async function fetchBookmarks() {
+  await bookmarkStore.fetchBookmarks({
+    page: currentPage.value,
+  });
+}
+
+onMounted(() => {
+  fetchBookmarks();
 });
 </script>
 
@@ -20,15 +25,32 @@ await bookmarkStore.fetchBookmarks({
       <h1 class="prose-2xl font-bold">Bookmarks</h1>
       <div class="divider my-2"></div>
       <div class="join my-2 w-full justify-end">
-        <button class="btn join-item">
+        <button
+          class="btn join-item"
+          :disabled="currentPage === 1"
+          @click="
+            currentPage -= 1;
+            fetchBookmarks();
+          "
+        >
           <Icon name="ph:caret-left-bold" />
         </button>
-        <button class="btn join-item">Page 22</button>
-        <button class="btn join-item">
+        <button class="btn join-item">Page {{ currentPage }}</button>
+        <button
+          class="btn join-item"
+          :disabled="currentPage === bookmarkStore.getMetada?.last_page"
+          @click="
+            currentPage += 1;
+            fetchBookmarks();
+          "
+        >
           <Icon name="ph:caret-right-bold" />
         </button>
       </div>
-      <BookmarkTableList :bookmarks="bookmarkStore.getBookmarks ?? []" />
+      <BookmarkTableList
+        :bookmarks="bookmarkStore.getBookmarks ?? []"
+        @update="fetchBookmarks()"
+      />
     </div>
   </div>
 </template>
