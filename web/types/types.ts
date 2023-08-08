@@ -43,5 +43,5 @@ export type Bookmark = {
 };
 
 export type BookmarkResponse = ApiResponseMetada & {
-  data: Bookmark[] | [];
+  data: Bookmark[];
 };

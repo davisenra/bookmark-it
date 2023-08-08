@@ -21,9 +21,6 @@ export const useBookmarkStore = defineStore("bookmark", () => {
   const bookmarks: Ref<BookmarkResponse | undefined> = ref();
 
   const getBookmarks = computed(() => bookmarks.value?.data);
-  const getUnvisitedBookmarks = computed(
-    () => bookmarks.value?.data.filter((bookark) => bookark.visited === false),
-  );
   const getMetada = computed(() => bookmarks.value?.meta);
 
   async function fetchBookmarks({
@@ -82,8 +79,8 @@ export const useBookmarkStore = defineStore("bookmark", () => {
   }
 
   return {
+    bookmarks,
     getBookmarks,
-    getUnvisitedBookmarks,
     getMetada,
     fetchBookmarks,
     createBookmark,

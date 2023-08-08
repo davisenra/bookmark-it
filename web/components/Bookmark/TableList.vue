@@ -12,16 +12,15 @@ defineEmits(["update"]);
 </script>
 
 <template>
-  <div class="overflow-y-hidden">
+  <div class="overflow-x-auto overflow-y-clip">
     <table class="table">
       <thead>
         <tr>
-          <th class="w-6">#</th>
+          <th class="w-4">#</th>
           <th>Title</th>
           <th>Visited</th>
-          <th>Tags</th>
           <th>Visited at</th>
-          <th>Actions</th>
+          <th class="w-36">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -42,20 +41,30 @@ defineEmits(["update"]);
             </div>
           </td>
           <td class="w-2/6">
-            {{ bookmark.title }}
+            <div class="flex flex-col gap-2">
+              {{
+                bookmark.title.length > 40
+                  ? bookmark.title.slice(0, 40) + "..."
+                  : bookmark.title
+              }}
+              <div class="flex space-x-1">
+                <BookmarkTagBadge
+                  v-for="tag in bookmark.tags"
+                  :key="tag.id"
+                  :tag="tag"
+                />
+              </div>
+            </div>
           </td>
           <td>
-            <div v-if="bookmark.visited" class="badge badge-success">
+            <div
+              v-if="bookmark.visited"
+              class="badge badge-success h-8 rounded-full"
+            >
               <Icon name="ph:check-bold" />
             </div>
-            <div v-else class="badge badge-error">
+            <div v-else class="badge badge-error h-8 rounded-full">
               <Icon name="ph:x-bold" />
-            </div>
-          </td>
-          <td class="space-x-2">
-            <BookmarkTagBadge :tag="bookmark.tags[0]" />
-            <div v-if="bookmark.tags.length > 1" class="badge badge-secondary">
-              +{{ bookmark.tags.length }}
             </div>
           </td>
           <td>
@@ -67,6 +76,9 @@ defineEmits(["update"]);
           </td>
           <td>
             <div class="flex space-x-2">
+              <a :href="bookmark.url" class="btn btn-sm" target="_blank">
+                <Icon name="ph:link" size="18" />
+              </a>
               <ButtonConfirm
                 @confirm="
                   bookmarkStore.markBookmarkAsVisited(bookmark.id);

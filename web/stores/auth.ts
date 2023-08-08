@@ -23,7 +23,7 @@ export const useAuthStore = defineStore(
         body: JSON.stringify(credentials),
       });
 
-      if (res.status === 204) {
+      if (res.status === 204 || res.status === 302) {
         isAuthenticated.value = true;
         navigateTo("/");
         return;

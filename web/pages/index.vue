@@ -32,16 +32,5 @@ await Promise.all([bookmarkStore.fetchBookmarks(), tagStore.fetchTags()]);
         </div>
       </div>
     </div>
-    <div>
-      <h1 class="prose-2xl font-bold">Recent bookmarks</h1>
-      <div class="divider my-2"></div>
-      <div class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-        <BookmarkCard
-          v-for="bookmark in bookmarkStore.getUnvisitedBookmarks"
-          :key="bookmark.id"
-          :bookmark="bookmark"
-        />
-      </div>
-    </div>
   </div>
 </template>

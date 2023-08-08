@@ -1,56 +1,133 @@
 <script setup lang="ts">
 import { useBookmarkStore } from "@/stores/bookmark";
+import { Bookmark } from "@/types/types";
+import { useTagStore } from "@/stores/tag";
 
 definePageMeta({
   middleware: "auth",
 });
 
-const currentPage = ref(1);
-const bookmarkStore = useBookmarkStore();
+onMounted(async () => {
+  await Promise.all([
+    bookmarkStore.fetchBookmarks({ page: currentPage.value }),
+    tagStore.fetchTags(),
+  ]);
 
-async function fetchBookmarks() {
-  await bookmarkStore.fetchBookmarks({
-    page: currentPage.value,
-  });
+  bookmarks.value = bookmarkStore.bookmarks?.data ?? [];
+});
+
+const currentPage = ref(1);
+const filterByName = ref("");
+const filterByTag = ref(null);
+const showUnvisitedOnly = ref(false);
+
+const bookmarkStore = useBookmarkStore();
+const tagStore = useTagStore();
+const bookmarks = ref<Bookmark[]>([]);
+
+const filteredBookmarks = computed(() => {
+  if (showUnvisitedOnly.value) {
+    return bookmarks.value.filter(
+      (bookmark) =>
+        bookmark.title
+          .toLowerCase()
+          .includes(filterByName.value.toLowerCase()) &&
+        bookmark.visited === false,
+    );
+  }
+
+  if (filterByTag.value) {
+    return bookmarks.value.filter(
+      (bookmark) =>
+        bookmark.title
+          .toLowerCase()
+          .includes(filterByName.value.toLowerCase()) &&
+        bookmark.tags.some((tag) => tag.name === filterByTag.value),
+    );
+  }
+
+  return bookmarks.value.filter((bookmark) =>
+    bookmark.title.toLowerCase().includes(filterByName.value.toLowerCase()),
+  );
+});
+
+async function handleUpdateTable(): Promise<void> {
+  await bookmarkStore.fetchBookmarks({ page: currentPage.value });
+  bookmarks.value = bookmarkStore.bookmarks?.data ?? [];
 }
 
-onMounted(() => {
-  fetchBookmarks();
-});
+function resetFilters(): void {
+  filterByName.value = "";
+  filterByTag.value = null;
+  showUnvisitedOnly.value = false;
+}
+
+function scrollToTop(): void {
+  window.scrollTo({ top: 0, left: 0 });
+}
 </script>
 
 <template>
-  <div class="container mx-auto my-6 flex flex-col space-y-6 px-3">
-    <div>
-      <h1 class="prose-2xl font-bold">Bookmarks</h1>
-      <div class="divider my-2"></div>
-      <div class="join my-2 w-full justify-end">
+  <div class="container mx-auto mt-6 flex flex-col space-y-2 px-3">
+    <h1 class="prose-2xl font-bold">Bookmarks</h1>
+    <div class="divider my-2"></div>
+    <div class="p-3">
+      <p class="prose mb-2 font-bold">Filters</p>
+      <div class="flex flex-wrap gap-3">
+        <div>
+          <input
+            v-model="filterByName"
+            class="input input-bordered input-sm"
+            placeholder="Search"
+          />
+        </div>
+        <select v-model="filterByTag" class="select select-bordered select-sm">
+          <option value="null" selected>Tag</option>
+          <option :value="tag.name" v-for="tag in tagStore.getTags">
+            {{ tag.name }}
+          </option>
+        </select>
         <button
-          class="btn join-item"
-          :disabled="currentPage === 1"
-          @click="
-            currentPage -= 1;
-            fetchBookmarks();
-          "
+          class="btn btn-sm"
+          @click="showUnvisitedOnly = !showUnvisitedOnly"
         >
-          <Icon name="ph:caret-left-bold" />
+          {{ showUnvisitedOnly ? "Show all" : "Unvisited only" }}
         </button>
-        <button class="btn join-item">Page {{ currentPage }}</button>
-        <button
-          class="btn join-item"
-          :disabled="currentPage === bookmarkStore.getMetada?.last_page"
-          @click="
-            currentPage += 1;
-            fetchBookmarks();
-          "
-        >
-          <Icon name="ph:caret-right-bold" />
+        <button class="btn btn-sm" @click="resetFilters">
+          <Icon name="ci:undo" />
         </button>
       </div>
+    </div>
+    <div class="w-full">
       <BookmarkTableList
-        :bookmarks="bookmarkStore.getBookmarks ?? []"
-        @update="fetchBookmarks()"
+        :bookmarks="filteredBookmarks ?? []"
+        @update="handleUpdateTable"
       />
+    </div>
+    <div class="join my-3 w-full justify-end">
+      <button
+        class="btn join-item"
+        :disabled="currentPage === 1"
+        @click="
+          currentPage -= 1;
+          handleUpdateTable();
+          scrollToTop();
+        "
+      >
+        <Icon name="ph:caret-left-bold" />
+      </button>
+      <button class="btn join-item">Page {{ currentPage }}</button>
+      <button
+        class="btn join-item"
+        :disabled="currentPage === bookmarkStore.getMetada?.last_page"
+        @click="
+          currentPage += 1;
+          handleUpdateTable();
+          scrollToTop();
+        "
+      >
+        <Icon name="ph:caret-right-bold" />
+      </button>
     </div>
   </div>
 </template>

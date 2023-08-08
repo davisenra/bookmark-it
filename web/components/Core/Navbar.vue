@@ -5,7 +5,7 @@
     <div class="navbar-start">
       <label
         for="sidebar-drawer"
-        class="btn btn-square btn-ghost drawer-button"
+        class="btn btn-square btn-ghost drawer-button lg:hidden"
       >
         <Icon name="ic:baseline-menu" size="24" />
       </label>

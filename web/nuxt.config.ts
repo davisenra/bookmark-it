@@ -9,8 +9,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBase: "http://api.bookmarkit.local:8000",
-      appDomain: "http://bookmarkit.local",
+      apiBase: process.env.API_BASE,
+      appDomain: process.env.APP_DOMAIN,
     },
   },
   devtools: { enabled: false },
