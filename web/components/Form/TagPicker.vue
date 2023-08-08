@@ -33,7 +33,7 @@ function isTagPicked(tag: Tag) {
       :class="{
         'bg-accent text-accent-content hover:bg-accent-focus': isTagPicked(tag),
       }"
-      v-for="tag in availableTags"
+      v-for="tag in availableTags?.sort()"
       :key="tag.id"
       @click="toggleTagPicked(tag)"
     >

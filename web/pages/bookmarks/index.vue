@@ -82,7 +82,7 @@ function scrollToTop(): void {
           />
         </div>
         <select v-model="filterByTag" class="select select-bordered select-sm">
-          <option value="null" selected>Tag</option>
+          <option :value="null" selected>Tag</option>
           <option :value="tag.name" v-for="tag in tagStore.getTags">
             {{ tag.name }}
           </option>

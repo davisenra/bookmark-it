@@ -10,7 +10,7 @@ function handleClick(): void {
 function startDeleteTimer(): void {
   setTimeout(() => {
     confirmAction.value = false;
-  }, 2000);
+  }, 1000);
 }
 </script>
 
@@ -19,14 +19,7 @@ function startDeleteTimer(): void {
     <button v-if="!confirmAction" @click="handleClick" class="btn btn-sm">
       <Icon name="ph:check-square-bold" />
     </button>
-    <button
-      v-else
-      @click="
-        emit('confirm');
-        confirmAction = false;
-      "
-      class="btn btn-success btn-sm"
-    >
+    <button v-else @click="emit('confirm')" class="btn btn-success btn-sm">
       <Icon name="ph:check-bold" />
     </button>
   </div>
