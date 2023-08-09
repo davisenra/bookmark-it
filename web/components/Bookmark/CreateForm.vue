@@ -82,7 +82,7 @@ function generateTitle(): void {
       <label class="label">
         <span class="label-text">Tags</span>
       </label>
-      <FormTagPicker :picked-tags-bag="bookmark.tags" />
+      <TagPicker :picked-tags-bag="bookmark.tags" />
     </div>
     <button type="submit" class="btn btn-primary my-3">
       <Icon v-if="!isSending" name="ph:floppy-disk-bold" size="20" />

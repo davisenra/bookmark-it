@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const confirmAction = ref(false);
+const isSending = ref(false);
 const emit = defineEmits(["confirm"]);
 
 function handleClick(): void {
@@ -7,10 +8,16 @@ function handleClick(): void {
   confirmAction.value = true;
 }
 
+function handleSecondClick(): void {
+  isSending.value = true;
+  emit("confirm");
+}
+
 function startDeleteTimer(): void {
   setTimeout(() => {
     confirmAction.value = false;
-  }, 1000);
+    isSending.value = false;
+  }, 1500);
 }
 </script>
 
@@ -19,7 +26,12 @@ function startDeleteTimer(): void {
     <button v-if="!confirmAction" @click="handleClick" class="btn btn-sm">
       <Icon name="ph:check-square-bold" />
     </button>
-    <button v-else @click="emit('confirm')" class="btn btn-success btn-sm">
+    <button
+      v-else
+      @click="handleSecondClick"
+      class="btn btn-success btn-sm"
+      :disabled="isSending"
+    >
       <Icon name="ph:check-bold" />
     </button>
   </div>

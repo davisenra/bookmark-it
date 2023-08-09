@@ -5,7 +5,9 @@ import { useTagStore } from "@/stores/tag";
 const tagStore = useTagStore();
 await tagStore.fetchTags();
 
-const availableTags: Ref<Tag[] | undefined> = ref(tagStore.getTags);
+const availableTags = computed(() => {
+  return tagStore.getTags?.sort((a, b) => a.name.localeCompare(b.name));
+});
 
 const { pickedTagsBag } = defineProps<{ pickedTagsBag: Tag[] }>();
 
@@ -40,7 +42,7 @@ function isTagPicked(tag: Tag) {
       {{ tag.name }}
     </button>
     <p v-if="availableTags === undefined" class="prose-sm">
-      Looks like you have no tags :(
+      {{ "Looks like you have no tags :(" }}
     </p>
   </div>
 </template>

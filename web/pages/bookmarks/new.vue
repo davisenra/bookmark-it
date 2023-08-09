@@ -8,6 +8,6 @@ definePageMeta({
   <div>
     <h1 class="prose-2xl font-bold">New bookmark</h1>
     <div class="divider my-2"></div>
-    <FormCreateBookmark />
+    <BookmarkCreateForm />
   </div>
 </template>

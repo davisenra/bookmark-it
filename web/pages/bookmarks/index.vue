@@ -90,14 +90,14 @@ function resetFilters(): void {
       </div>
     </div>
     <div class="w-full">
-      <BookmarkTableList
+      <BookmarkTable
         :bookmarks="filteredBookmarks ?? []"
         @update="handleUpdateTable()"
       />
     </div>
     <div class="join my-3 w-full justify-end">
       <button
-        class="btn join-item"
+        class="btn join-item btn-sm"
         :disabled="currentPage === 1"
         @click="
           currentPage -= 1;
@@ -106,9 +106,9 @@ function resetFilters(): void {
       >
         <Icon name="ph:caret-left-bold" />
       </button>
-      <button class="btn join-item">Page {{ currentPage }}</button>
+      <button class="btn join-item btn-sm">Page {{ currentPage }}</button>
       <button
-        class="btn join-item"
+        class="btn join-item btn-sm"
         :disabled="currentPage === bookmarkStore.getMetada?.last_page"
         @click="
           currentPage += 1;

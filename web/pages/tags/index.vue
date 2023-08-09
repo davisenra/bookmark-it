@@ -9,12 +9,12 @@ definePageMeta({
     <div>
       <h1 class="prose-2xl font-bold">New tag</h1>
       <div class="divider my-2"></div>
-      <FormCreateTag />
+      <TagCreateForm />
     </div>
     <div>
       <h1 class="prose-2xl font-bold">Tags</h1>
       <div class="divider my-2"></div>
-      <TagTableList />
+      <TagTable />
     </div>
   </div>
 </template>

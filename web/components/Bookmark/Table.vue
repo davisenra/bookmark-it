@@ -8,11 +8,21 @@ defineProps<{
   bookmarks: Bookmark[];
 }>();
 
-defineEmits(["update"]);
+const emit = defineEmits(["update"]);
+
+async function handleMarkAsVisited(bookmark: Bookmark) {
+  await bookmarkStore.markBookmarkAsVisited(bookmark.id);
+  emit("update");
+}
+
+async function handleDeleteBookmark(bookmark: Bookmark) {
+  await bookmarkStore.deleteBookmark(bookmark.id);
+  emit("update");
+}
 </script>
 
 <template>
-  <div class="overflow-x-auto overflow-y-clip">
+  <div class="mb-3 overflow-x-auto overflow-y-clip">
     <table class="table table-xs">
       <thead>
         <tr>
@@ -27,11 +37,13 @@ defineEmits(["update"]);
         <tr class="hover" v-for="bookmark in bookmarks" :key="bookmark.id">
           <td class="w-4/6">
             <div class="prose-sm flex flex-col gap-2">
-              {{
-                bookmark.title.length > 50
-                  ? bookmark.title.slice(0, 50) + "..."
-                  : bookmark.title
-              }}
+              <a :href="bookmark.url" class="link-hover" target="_blank">
+                {{
+                  bookmark.title.length > 50
+                    ? bookmark.title.slice(0, 50) + "..."
+                    : bookmark.title
+                }}
+              </a>
               <div class="flex space-x-1">
                 <BookmarkTagBadge
                   v-for="tag in bookmark.tags"
@@ -63,18 +75,8 @@ defineEmits(["update"]);
               <a :href="bookmark.url" class="btn btn-sm" target="_blank">
                 <Icon name="ph:link" size="18" />
               </a>
-              <ButtonConfirm
-                @confirm="
-                  bookmarkStore.markBookmarkAsVisited(bookmark.id);
-                  $emit('update');
-                "
-              />
-              <ButtonDelete
-                @delete="
-                  bookmarkStore.deleteBookmark(bookmark.id);
-                  $emit('update');
-                "
-              />
+              <ButtonConfirm @confirm="handleMarkAsVisited(bookmark)" />
+              <ButtonDelete @delete="handleDeleteBookmark(bookmark)" />
             </div>
           </td>
         </tr>

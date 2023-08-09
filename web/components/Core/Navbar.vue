@@ -17,7 +17,7 @@
       </NuxtLink>
     </div>
     <div class="navbar-end">
-      <NuxtLink to="/new-bookmark" class="btn btn-primary">
+      <NuxtLink to="/bookmarks/new" class="btn btn-primary">
         <Icon name="ph:bookmark-simple-fill" size="18" />
         <span class="hidden sm:block">New bookmark</span>
       </NuxtLink>
