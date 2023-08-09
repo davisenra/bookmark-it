@@ -1,62 +1,58 @@
 import { defineStore } from "pinia";
 
 export const useAuthStore = defineStore(
-  "auth",
-  () => {
-    const isAuthenticated = ref(false);
+    "auth",
+    () => {
+        const isAuthenticated = ref(false);
 
-    async function csrfToken(): Promise<void> {
-      await useApiFetch(`/sanctum/csrf-cookie`, { method: "GET" });
-    }
+        async function csrfToken(): Promise<void> {
+            await useApiFetch(`/sanctum/csrf-cookie`, { method: "GET" });
+        }
 
-    async function login(credentials: {
-      email: string;
-      password: string;
-      remember?: boolean;
-    }): Promise<void> {
-      await csrfToken();
+        async function login(credentials: { email: string; password: string; remember?: boolean }): Promise<void> {
+            await csrfToken();
 
-      credentials.remember = true;
+            credentials.remember = true;
 
-      const res = await useApiFetch(`/login`, {
-        method: "POST",
-        body: JSON.stringify(credentials),
-      });
+            const res = await useApiFetch(`/login`, {
+                method: "POST",
+                body: JSON.stringify(credentials),
+            });
 
-      if (res.status === 204 || res.redirected) {
-        isAuthenticated.value = true;
-        navigateTo("/");
-        return;
-      }
+            if (res.status === 204 || res.redirected) {
+                isAuthenticated.value = true;
+                navigateTo("/");
+                return;
+            }
 
-      if (res.status >= 500) {
-        throw Error("Internal server error");
-      }
+            if (res.status >= 500) {
+                throw Error("Internal server error");
+            }
 
-      if (res.status === 422) {
-        throw Error("Invalid credentials");
-      }
-    }
+            if (res.status === 422) {
+                throw Error("Invalid credentials");
+            }
+        }
 
-    async function logout(): Promise<void> {
-      try {
-        await useApiFetch(`/logout`, { method: "POST" });
-        isAuthenticated.value = false;
-        navigateTo("login");
-      } catch (err) {
-        console.error(err);
-      }
-    }
+        async function logout(): Promise<void> {
+            try {
+                await useApiFetch(`/logout`, { method: "POST" });
+                isAuthenticated.value = false;
+                navigateTo("login");
+            } catch (err) {
+                console.error(err);
+            }
+        }
 
-    return {
-      isAuthenticated,
-      login,
-      logout,
-    };
-  },
-  {
-    persist: {
-      storage: localStorage,
+        return {
+            isAuthenticated,
+            login,
+            logout,
+        };
     },
-  },
+    {
+        persist: {
+            storage: localStorage,
+        },
+    },
 );

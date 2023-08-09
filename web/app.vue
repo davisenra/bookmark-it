@@ -1,16 +1,16 @@
 <template>
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+    <NuxtLayout>
+        <NuxtPage />
+    </NuxtLayout>
 </template>
 
 <style>
 .page-enter-active,
 .page-leave-active {
-  transition: opacity 0.2s;
+    transition: opacity 0.2s;
 }
 .page-enter,
 .page-leave-active {
-  opacity: 0;
+    opacity: 0;
 }
 </style>

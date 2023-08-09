@@ -1,24 +1,19 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  ssr: false,
-  spaLoadingTemplate: false,
-  app: {
-    head: {
-      title: "Bookmark It",
+    ssr: false,
+    spaLoadingTemplate: false,
+    app: {
+        head: {
+            title: "Bookmark It",
+        },
+        pageTransition: { name: "page", mode: "out-in" },
     },
-    pageTransition: { name: "page", mode: "out-in" },
-  },
-  runtimeConfig: {
-    public: {
-      apiBase: process.env.API_BASE,
-      appDomain: process.env.APP_DOMAIN,
+    runtimeConfig: {
+        public: {
+            apiBase: process.env.API_BASE,
+            appDomain: process.env.APP_DOMAIN,
+        },
     },
-  },
-  devtools: { enabled: false },
-  modules: [
-    "@pinia/nuxt",
-    "@pinia-plugin-persistedstate/nuxt",
-    "@nuxtjs/tailwindcss",
-    "nuxt-icon",
-  ],
+    devtools: { enabled: false },
+    modules: ["@pinia/nuxt", "@pinia-plugin-persistedstate/nuxt", "@nuxtjs/tailwindcss", "nuxt-icon"],
 });
