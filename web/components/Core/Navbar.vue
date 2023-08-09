@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="navbar shadow">
+  <div class="navbar px-2 shadow lg:px-6">
     <div class="navbar-start">
       <label
         for="sidebar-drawer"

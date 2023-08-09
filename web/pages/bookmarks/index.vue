@@ -26,34 +26,29 @@ const tagStore = useTagStore();
 const bookmarks = ref<Bookmark[]>([]);
 
 const filteredBookmarks = computed(() => {
-  if (showUnvisitedOnly.value) {
-    return bookmarks.value.filter(
-      (bookmark) =>
-        bookmark.title
-          .toLowerCase()
-          .includes(filterByName.value.toLowerCase()) &&
-        bookmark.visited === false,
-    );
-  }
+  return bookmarks.value.filter((bookmark) => {
+    const titleMatches = bookmark.title
+      .toLowerCase()
+      .includes(filterByName.value.toLowerCase());
 
-  if (filterByTag.value) {
-    return bookmarks.value.filter(
-      (bookmark) =>
-        bookmark.title
-          .toLowerCase()
-          .includes(filterByName.value.toLowerCase()) &&
-        bookmark.tags.some((tag) => tag.name === filterByTag.value),
-    );
-  }
+    if (showUnvisitedOnly.value && bookmark.visited) {
+      return false;
+    }
 
-  return bookmarks.value.filter((bookmark) =>
-    bookmark.title.toLowerCase().includes(filterByName.value.toLowerCase()),
-  );
+    if (
+      filterByTag.value &&
+      !bookmark.tags.some((tag) => tag.name === filterByTag.value)
+    ) {
+      return false;
+    }
+
+    return titleMatches;
+  });
 });
 
 async function handleUpdateTable(): Promise<void> {
   await bookmarkStore.fetchBookmarks({ page: currentPage.value });
-  bookmarks.value = bookmarkStore.bookmarks?.data ?? [];
+  bookmarks.value = bookmarkStore.bookmarks?.data as Bookmark[];
 }
 
 function resetFilters(): void {
@@ -61,17 +56,13 @@ function resetFilters(): void {
   filterByTag.value = null;
   showUnvisitedOnly.value = false;
 }
-
-function scrollToTop(): void {
-  window.scrollTo({ top: 0, left: 0 });
-}
 </script>
 
 <template>
-  <div class="container mx-auto mt-6 flex flex-col space-y-2 px-3">
+  <div class="flex flex-col space-y-2">
     <h1 class="prose-2xl font-bold">Bookmarks</h1>
     <div class="divider my-2"></div>
-    <div class="p-3">
+    <div class="py-3">
       <p class="prose mb-2 font-bold">Filters</p>
       <div class="flex flex-wrap gap-3">
         <div>
@@ -101,7 +92,7 @@ function scrollToTop(): void {
     <div class="w-full">
       <BookmarkTableList
         :bookmarks="filteredBookmarks ?? []"
-        @update="handleUpdateTable"
+        @update="handleUpdateTable()"
       />
     </div>
     <div class="join my-3 w-full justify-end">
@@ -111,7 +102,6 @@ function scrollToTop(): void {
         @click="
           currentPage -= 1;
           handleUpdateTable();
-          scrollToTop();
         "
       >
         <Icon name="ph:caret-left-bold" />
@@ -123,7 +113,6 @@ function scrollToTop(): void {
         @click="
           currentPage += 1;
           handleUpdateTable();
-          scrollToTop();
         "
       >
         <Icon name="ph:caret-right-bold" />

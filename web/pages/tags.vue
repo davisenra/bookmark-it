@@ -5,7 +5,7 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="container mx-auto mt-6 flex flex-col space-y-6 px-3">
+  <div class="flex flex-col space-y-6">
     <div>
       <h1 class="prose-2xl font-bold">New tag</h1>
       <div class="divider my-2"></div>

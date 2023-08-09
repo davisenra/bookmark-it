@@ -2,7 +2,7 @@
   <CoreSidebar>
     <div class="flex min-h-screen flex-col">
       <CoreNavbar />
-      <div class="flex-grow">
+      <div class="container mx-auto my-6 flex-grow px-3 lg:px-6">
         <slot />
       </div>
       <CoreFooter />
