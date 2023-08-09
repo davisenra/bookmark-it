@@ -23,7 +23,7 @@ export const useAuthStore = defineStore(
         body: JSON.stringify(credentials),
       });
 
-      if (res.status === 204 || res.status === 302) {
+      if (res.status === 204 || res.redirected) {
         isAuthenticated.value = true;
         navigateTo("/");
         return;
@@ -54,5 +54,9 @@ export const useAuthStore = defineStore(
       logout,
     };
   },
-  { persist: true },
+  {
+    persist: {
+      storage: localStorage,
+    },
+  },
 );
