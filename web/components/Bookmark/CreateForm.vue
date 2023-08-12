@@ -11,6 +11,7 @@ const bookmark = ref<CreateBookmarkPayload>({
 });
 
 const isSending = ref(false);
+const isFetchingTitle = ref(false);
 
 async function handleBookmarkCreation(): Promise<void> {
     isSending.value = true;
@@ -25,13 +26,18 @@ async function handleBookmarkCreation(): Promise<void> {
     isSending.value = false;
 }
 
-function generateTitle(): void {
-    try {
-        const newTitle = useTitleGenerator(bookmark.value.url);
-        bookmark.value.title = newTitle;
-    } catch (e) {
-        console.error(e);
+async function generateTitle() {
+    isFetchingTitle.value = true;
+
+    const newTitle = await useTitleGenerator(bookmark.value.url);
+
+    if (newTitle === null) {
+        isFetchingTitle.value = false;
+        return;
     }
+
+    bookmark.value.title = newTitle;
+    isFetchingTitle.value = false;
 }
 </script>
 
@@ -55,7 +61,8 @@ function generateTitle(): void {
                     class="input input-bordered w-full pr-12"
                 />
                 <button class="btn btn-circle btn-ghost btn-sm fixed -ml-10 mt-2" type="button" @click="generateTitle">
-                    <Icon name="ph:lightbulb" />
+                    <Icon v-if="!isFetchingTitle" name="ph:lightbulb" size="18" />
+                    <span v-else class="loading loading-spinner"></span>
                 </button>
             </div>
         </div>
