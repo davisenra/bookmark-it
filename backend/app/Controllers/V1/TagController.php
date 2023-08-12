@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace App\Controllers\V1;
 
-use App\Controllers\Controller;
 use App\Models\Tag;
 use App\Models\User;
 use App\Requests\Tag\CreateTagRequest;
 use App\Resources\TagResource;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 
-class TagController extends Controller
+class TagController
 {
     public function index(Request $request): JsonResource
     {

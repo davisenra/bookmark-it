@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controllers\V1;
 
-use App\Controllers\Controller;
 use App\Models\User;
 use App\Requests\Bookmark\CreateBookmarkRequest;
 use App\Requests\Bookmark\ListBookmarkRequest;
@@ -16,7 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 
-class BookmarkController extends Controller
+class BookmarkController
 {
     public function __construct(
         private readonly BookmarkService $bookmarkService

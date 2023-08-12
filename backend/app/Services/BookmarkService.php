@@ -46,9 +46,9 @@ class BookmarkService
         return $queryBuilder->paginate($paginationSize);
     }
 
-    public function getUserBookmarkById(User $user, string $id): ?Bookmark
+    public function getUserBookmarkById(User $user, string $bookmarkId): ?Bookmark
     {
-        $bookmark = $user->bookmarks()->where('id', $id)->first();
+        $bookmark = $user->bookmarks()->where('id', $bookmarkId)->first();
 
         if ($bookmark instanceof Bookmark) {
             return $bookmark;
