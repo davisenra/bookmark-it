@@ -2,6 +2,7 @@
 
 use App\Controllers\V1\BookmarkController;
 use App\Controllers\V1\TagController;
+use App\Controllers\V1\TitleGeneratorController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -26,3 +27,6 @@ Route::group([
     Route::post('/tags', 'store');
     Route::delete('/tags/{id}', 'destroy');
 });
+
+Route::get('/v1/title-generator', [TitleGeneratorController::class, 'generate'])
+    ->middleware('auth:sanctum');
