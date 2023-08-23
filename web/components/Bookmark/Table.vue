@@ -27,14 +27,18 @@ async function handleDeleteBookmark(bookmark: Bookmark) {
             <thead>
                 <tr>
                     <th>Title</th>
-                    <th>Visited</th>
                     <th>Visited at</th>
                     <th>Created at</th>
                     <th class="w-36">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <tr class="hover" v-for="bookmark in bookmarks" :key="bookmark.id">
+                <tr
+                    v-for="bookmark in bookmarks"
+                    :key="bookmark.id"
+                    class="hover border-l-4"
+                    :class="[bookmark.visited ? 'border-l-success' : 'border-l-warning']"
+                >
                     <td class="w-4/6">
                         <div class="prose-sm flex flex-col gap-2">
                             <a :href="bookmark.url" class="link-hover" target="_blank">
@@ -44,10 +48,6 @@ async function handleDeleteBookmark(bookmark: Bookmark) {
                                 <BookmarkTagBadge v-for="tag in bookmark.tags" :key="tag.id" :tag="tag" />
                             </div>
                         </div>
-                    </td>
-                    <td class="w-4 text-center">
-                        <div v-if="bookmark.visited" class="badge badge-success badge-sm"></div>
-                        <div v-else class="badge badge-error badge-sm"></div>
                     </td>
                     <td class="w-6">
                         {{ bookmark.visited_at ? new Date(bookmark.visited_at).toLocaleDateString() : "" }}

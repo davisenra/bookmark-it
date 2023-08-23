@@ -1,36 +1,53 @@
 <script setup lang="ts">
-import { useBookmarkStore } from "@/stores/bookmark";
-import { useTagStore } from "@/stores/tag";
+import { useDashboardStore } from "@/stores/dashboard";
 
 definePageMeta({
     middleware: "auth",
 });
 
-const bookmarkStore = useBookmarkStore();
-const tagStore = useTagStore();
-
-await Promise.all([bookmarkStore.fetchBookmarks(), tagStore.fetchTags()]);
+const dashboardStore = useDashboardStore();
+const dashboardData = await dashboardStore.getDashboardData();
+const unreadBookmarksPercentage = computed(
+    () => (dashboardData.bookmarks_unvisited * 100) / dashboardData.total_bookmarks,
+);
 </script>
 
 <template>
     <div class="flex flex-col space-y-6">
         <div>
-            <h1 class="prose-2xl font-bold">Stats</h1>
+            <h1 class="prose-2xl font-bold">Dashboard</h1>
             <div class="divider my-2"></div>
-            <div class="stats shadow">
-                <div class="stat">
-                    <div class="stat-title">Bookmarks</div>
-                    <div class="stat-value text-primary">
-                        {{ bookmarkStore.getMetada?.total }}
-                    </div>
-                </div>
-                <div class="stat">
-                    <div class="stat-title">Tags</div>
-                    <div class="stat-value text-primary">
-                        {{ tagStore.getMetada?.total }}
-                    </div>
-                </div>
-            </div>
         </div>
+        <div class="grid gap-3 md:grid-cols-2">
+            <DashboardCard>
+                <div class="w-max rounded-full bg-base-200 p-3">
+                    <Icon name="ph:bookmark-bold" class="text-primary" size="36" />
+                </div>
+                <div>
+                    <p class="text-4xl font-extrabold text-primary">
+                        {{ dashboardData.total_bookmarks }}
+                    </p>
+                </div>
+                <p class="prose-xl font-bold text-primary">Bookmarks</p>
+            </DashboardCard>
+            <DashboardCard>
+                <div class="w-max rounded-full bg-base-200 p-3">
+                    <Icon name="ph:tag-bold" class="text-accent" size="36" />
+                </div>
+                <div>
+                    <p class="text-4xl font-extrabold text-accent">
+                        {{ dashboardData.total_tags }}
+                    </p>
+                </div>
+                <p class="prose-xl font-bold text-accent">Tags</p>
+            </DashboardCard>
+        </div>
+        <!--        <div>-->
+        <!--            <h1 class="prose-2xl font-bold">Stats</h1>-->
+        <!--            <div class="divider my-2"></div>-->
+        <!--        </div>-->
+        <!--        <div>-->
+        <!--            <div></div>-->
+        <!--        </div>-->
     </div>
 </template>
