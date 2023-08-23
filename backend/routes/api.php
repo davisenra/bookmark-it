@@ -1,9 +1,16 @@
 <?php
 
 use App\Controllers\V1\BookmarkController;
+use App\Controllers\V1\DashboardController;
 use App\Controllers\V1\TagController;
 use App\Controllers\V1\TitleGeneratorController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/v1/dashboard', [DashboardController::class, 'index'])
+    ->middleware('auth:sanctum');
+
+Route::get('/v1/title-generator', [TitleGeneratorController::class, 'generate'])
+    ->middleware('auth:sanctum');
 
 Route::group([
     'controller' => BookmarkController::class,
@@ -27,6 +34,3 @@ Route::group([
     Route::post('/tags', 'store');
     Route::delete('/tags/{id}', 'destroy');
 });
-
-Route::get('/v1/title-generator', [TitleGeneratorController::class, 'generate'])
-    ->middleware('auth:sanctum');

@@ -26,7 +26,7 @@ class BookmarkController
     {
         /** @var User $user */
         $user = $request->user();
-        $userBookmarks = $this->bookmarkService->allBookmarksByUser($user, $request->validated());
+        $userBookmarks = $this->bookmarkService->allBookmarksPaginatedByUser($user, $request->validated());
 
         return BookmarkResource::collection($userBookmarks);
     }

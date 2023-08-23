@@ -6,16 +6,22 @@ namespace App\Services;
 
 use App\Models\Bookmark;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class BookmarkService
 {
+    public function allBookmarksByUser(User $user): Collection
+    {
+        return Bookmark::all()->where('user_id', $user->id);
+    }
+
     /**
      * @param User $user
      * @param string[] $options
      * @return LengthAwarePaginator<Bookmark>
      */
-    public function allBookmarksByUser(User $user, array $options = []): LengthAwarePaginator
+    public function allBookmarksPaginatedByUser(User $user, array $options = []): LengthAwarePaginator
     {
         $paginationSize = isset($options['per_page']) ? (int) $options['per_page'] : 15;
 
