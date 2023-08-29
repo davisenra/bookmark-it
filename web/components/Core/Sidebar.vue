@@ -8,14 +8,14 @@ async function handleLogout(): Promise<void> {
 </script>
 
 <template>
-    <div class="drawer lg:drawer-open">
+    <div class="drawer">
         <input id="sidebar-drawer" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content min-w-0">
+        <div class="drawer-content min-w-0 bg-base-200">
             <slot />
         </div>
         <div class="drawer-side">
             <label for="sidebar-drawer" class="drawer-overlay"></label>
-            <ul class="menu h-full w-80 space-y-2 bg-base-200 p-4 text-base-content">
+            <ul class="menu h-full w-80 space-y-2 border bg-white p-4 text-base-content">
                 <li>
                     <NuxtLink to="/" class="text-lg font-semibold"> <Icon name="ph:house-bold" /> Dashboard </NuxtLink>
                 </li>

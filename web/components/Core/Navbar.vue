@@ -1,9 +1,9 @@
 <script setup lang="ts"></script>
 
 <template>
-    <div class="navbar px-2 shadow lg:px-6">
+    <div class="navbar bg-white px-2 shadow lg:px-6">
         <div class="navbar-start">
-            <label for="sidebar-drawer" class="btn btn-square btn-ghost drawer-button lg:hidden">
+            <label for="sidebar-drawer" class="btn btn-square btn-ghost drawer-button">
                 <Icon name="ic:baseline-menu" size="24" />
             </label>
         </div>

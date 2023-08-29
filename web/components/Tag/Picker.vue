@@ -1,15 +1,20 @@
 <script setup lang="ts">
-import { Tag } from "types/types";
+import { Tag, TagResponse } from "@/types/types";
 import { useTagStore } from "@/stores/tag";
+import { onMounted } from "vue";
 
 const tagStore = useTagStore();
-await tagStore.fetchTags();
+const tags = ref<TagResponse | null>(null);
 
 const availableTags = computed(() => {
-    return tagStore.getTags?.sort((a, b) => a.name.localeCompare(b.name));
+    return tags.value?.data?.sort((a, b) => a.name.localeCompare(b.name));
 });
 
 const { pickedTagsBag } = defineProps<{ pickedTagsBag: Tag[] }>();
+
+onMounted(async () => {
+    tags.value = (await tagStore.fetchTags()) || null;
+});
 
 function toggleTagPicked(tag: Tag): void {
     const index = pickedTagsBag.findIndex((t) => t.id === tag.id);

@@ -41,7 +41,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="flex flex-col space-y-2">
+    <div class="flex flex-col space-y-2 rounded-md bg-white p-6 shadow-md">
         <h1 class="prose-2xl font-bold">Bookmarks</h1>
         <div class="divider my-2"></div>
         <div class="py-3">
