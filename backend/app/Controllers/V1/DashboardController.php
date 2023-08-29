@@ -23,7 +23,9 @@ class DashboardController
         $user = $request->user();
         $bookmarks = $this->bookmarkService->allBookmarksByUser($user);
 
-        $fistDayOfWeek = (new \DateTime('now'))->modify('this week');
+        $fistDayOfWeek = (new \DateTime('now'))
+            ->modify('this week')
+            ->setTime(0, 0);
 
         $tags = Tag::select('id', 'name', 'created_at')
             ->where('user_id', $user->id)
