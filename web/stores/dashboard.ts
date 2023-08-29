@@ -18,7 +18,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
             method: "GET",
         });
 
-        const data: DashboardResponse = await res.json();
+        const data: DashboardResponse = await res?.json();
 
         return data.data;
     }

@@ -1,4 +1,8 @@
-export async function useApiFetch(path: string, options?: RequestInit): Promise<Response> {
+import { useAuthStore } from "~/stores/auth";
+
+export async function useApiFetch(path: string, options?: RequestInit) {
+    const authStore = useAuthStore();
+
     const token = useCookie("XSRF-TOKEN");
 
     const headers = {
@@ -8,7 +12,7 @@ export async function useApiFetch(path: string, options?: RequestInit): Promise<
         "X-XSRF-TOKEN": token.value as string,
     };
 
-    return fetch(`${useRuntimeConfig().public.apiBase + path}`, {
+    const res = await fetch(`${useRuntimeConfig().public.apiBase + path}`, {
         credentials: "include",
         ...options,
         headers: {
@@ -16,4 +20,12 @@ export async function useApiFetch(path: string, options?: RequestInit): Promise<
             ...options?.headers,
         },
     });
+
+    if (res.status === 401) {
+        authStore.isAuthenticated = false;
+        navigateTo("login");
+        return;
+    }
+
+    return res;
 }

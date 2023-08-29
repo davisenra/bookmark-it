@@ -1,4 +1,4 @@
-type ApiResponseMetada = {
+export type ApiResponseMetada = {
     links: {
         first: string;
         last: string;

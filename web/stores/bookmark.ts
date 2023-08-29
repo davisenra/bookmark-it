@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { Tag, BookmarkResponse } from "@/types/types";
+import { BookmarkResponse, Tag } from "@/types/types";
 
 export type FetchBookmarksOptions = {
     visitedOnly?: 0 | 1;
@@ -18,17 +18,13 @@ export type CreateBookmarkPayload = {
 };
 
 export const useBookmarkStore = defineStore("bookmark", () => {
-    const bookmarks: Ref<BookmarkResponse | undefined> = ref();
-
-    const getBookmarks = computed(() => bookmarks.value?.data);
-    const getMetada = computed(() => bookmarks.value?.meta);
-
     async function fetchBookmarks({
         page = 1,
         perPage = 30,
         sortBy = "created_at",
         sortDirection = "desc",
-    }: FetchBookmarksOptions = {}): Promise<void> {
+        tag = undefined,
+    }: FetchBookmarksOptions = {}) {
         const queryParams = new URLSearchParams({
             page: page.toString(),
             per_page: perPage.toString(),
@@ -36,16 +32,19 @@ export const useBookmarkStore = defineStore("bookmark", () => {
             sort_direction: sortDirection,
         });
 
+        if (tag !== undefined) {
+            queryParams.append("tag", tag);
+        }
+
         try {
             const res = await useApiFetch(`/v1/bookmarks?${queryParams.toString()}`);
-            const data: BookmarkResponse = await res.json();
-            bookmarks.value = data;
+            return (await res?.json()) as BookmarkResponse;
         } catch (err) {
             console.error(err);
         }
     }
 
-    async function createBookmark(payload: CreateBookmarkPayload): Promise<void> {
+    async function createBookmark(payload: CreateBookmarkPayload) {
         const tagsToApi = payload.tags.map((tag) => {
             return {
                 id: tag.id,
@@ -66,22 +65,19 @@ export const useBookmarkStore = defineStore("bookmark", () => {
         }
     }
 
-    async function deleteBookmark(id: string): Promise<void> {
+    async function deleteBookmark(id: string) {
         await useApiFetch(`/v1/bookmarks/${id}`, {
             method: "DELETE",
         });
     }
 
-    async function markBookmarkAsVisited(id: string): Promise<void> {
+    async function markBookmarkAsVisited(id: string) {
         await useApiFetch(`/v1/bookmarks/${id}/visited`, {
             method: "PATCH",
         });
     }
 
     return {
-        bookmarks,
-        getBookmarks,
-        getMetada,
         fetchBookmarks,
         createBookmark,
         deleteBookmark,

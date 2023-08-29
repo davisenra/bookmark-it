@@ -1,53 +1,43 @@
 <script setup lang="ts">
-import { useBookmarkStore } from "@/stores/bookmark";
-import { Bookmark } from "@/types/types";
+import { FetchBookmarksOptions, useBookmarkStore } from "@/stores/bookmark";
+import { BookmarkResponse } from "@/types/types";
 import { useTagStore } from "@/stores/tag";
 
 definePageMeta({
     middleware: "auth",
 });
 
-onMounted(async () => {
-    await Promise.all([bookmarkStore.fetchBookmarks({ page: currentPage.value }), tagStore.fetchTags()]);
-
-    bookmarks.value = bookmarkStore.bookmarks?.data ?? [];
-});
-
-const currentPage = ref(1);
-const filterByName = ref("");
-const filterByTag = ref(null);
-const showUnvisitedOnly = ref(false);
-
 const bookmarkStore = useBookmarkStore();
+const bookmarks = ref<BookmarkResponse | null>(null);
+
 const tagStore = useTagStore();
-const bookmarks = ref<Bookmark[]>([]);
+const tags = ref();
 
-const filteredBookmarks = computed(() => {
-    return bookmarks.value.filter((bookmark) => {
-        const titleMatches = bookmark.title.toLowerCase().includes(filterByName.value.toLowerCase());
-
-        if (showUnvisitedOnly.value && bookmark.visited) {
-            return false;
-        }
-
-        if (filterByTag.value && !bookmark.tags.some((tag) => tag.name === filterByTag.value)) {
-            return false;
-        }
-
-        return titleMatches;
-    });
+const filters = ref({
+    currentPage: 1,
+    filterByTag: null,
 });
-
-async function handleUpdateTable(): Promise<void> {
-    await bookmarkStore.fetchBookmarks({ page: currentPage.value });
-    bookmarks.value = bookmarkStore.bookmarks?.data as Bookmark[];
-}
 
 function resetFilters(): void {
-    filterByName.value = "";
-    filterByTag.value = null;
-    showUnvisitedOnly.value = false;
+    filters.value.filterByTag = null;
 }
+
+async function handleUpdateTable() {
+    const options: FetchBookmarksOptions = {
+        page: filters.value.currentPage,
+        tag: filters.value.filterByTag || undefined,
+    };
+
+    const bookmarksResponse = await bookmarkStore.fetchBookmarks(options);
+
+    bookmarks.value = bookmarksResponse ?? null;
+}
+
+onMounted(async () => {
+    const promises = await Promise.all([bookmarkStore.fetchBookmarks(), tagStore.fetchTags()]);
+    bookmarks.value = promises[0] ?? null;
+    tags.value = promises[1] ?? null;
+});
 </script>
 
 <template>
@@ -57,43 +47,50 @@ function resetFilters(): void {
         <div class="py-3">
             <p class="prose mb-2 font-bold">Filters</p>
             <div class="flex flex-wrap gap-3">
-                <div>
-                    <input v-model="filterByName" class="input input-bordered input-sm" placeholder="Search" />
-                </div>
-                <select v-model="filterByTag" class="select select-bordered select-sm">
+                <select
+                    @change="
+                        filters.currentPage = 1;
+                        handleUpdateTable();
+                    "
+                    v-model="filters.filterByTag"
+                    class="select select-bordered select-sm"
+                >
                     <option :value="null" selected>Tag</option>
-                    <option :value="tag.name" v-for="tag in tagStore.getTags">
+                    <option :value="tag.name" v-for="tag in tags?.data">
                         {{ tag.name }}
                     </option>
                 </select>
-                <button class="btn btn-sm" @click="showUnvisitedOnly = !showUnvisitedOnly">
-                    {{ showUnvisitedOnly ? "Show all" : "Unvisited only" }}
-                </button>
-                <button class="btn btn-sm" @click="resetFilters">
+                <button
+                    class="btn btn-sm"
+                    @click="
+                        resetFilters();
+                        handleUpdateTable();
+                    "
+                >
                     <Icon name="ci:undo" />
                 </button>
             </div>
         </div>
         <div class="w-full">
-            <BookmarkTable :bookmarks="filteredBookmarks ?? []" @update="handleUpdateTable()" />
+            <BookmarkTable :bookmarks="bookmarks?.data ?? []" @update="handleUpdateTable" />
         </div>
         <div class="join my-3 w-full justify-end">
             <button
                 class="btn join-item btn-sm"
-                :disabled="currentPage === 1"
+                :disabled="filters.currentPage === 1"
                 @click="
-                    currentPage -= 1;
+                    filters.currentPage -= 1;
                     handleUpdateTable();
                 "
             >
                 <Icon name="ph:caret-left-bold" />
             </button>
-            <button class="btn join-item btn-sm">Page {{ currentPage }}</button>
+            <button class="btn join-item btn-sm">Page {{ filters.currentPage }}</button>
             <button
                 class="btn join-item btn-sm"
-                :disabled="currentPage === bookmarkStore.getMetada?.last_page"
+                :disabled="filters.currentPage === bookmarks?.meta.last_page"
                 @click="
-                    currentPage += 1;
+                    filters.currentPage += 1;
                     handleUpdateTable();
                 "
             >
