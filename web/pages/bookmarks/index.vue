@@ -2,6 +2,7 @@
 import { FetchBookmarksOptions, useBookmarkStore } from "@/stores/bookmark";
 import { BookmarkResponse } from "@/types/types";
 import { useTagStore } from "@/stores/tag";
+import { debounce } from "debounce";
 
 definePageMeta({
     middleware: "auth",
@@ -16,22 +17,25 @@ const tags = ref();
 const filters = ref({
     currentPage: 1,
     filterByTag: null,
+    filterByTitle: "",
 });
 
 function resetFilters(): void {
+    filters.value.filterByTitle = "";
     filters.value.filterByTag = null;
 }
 
-async function handleUpdateTable() {
+const handleUpdateTable = debounce(async function () {
     const options: FetchBookmarksOptions = {
         page: filters.value.currentPage,
         tag: filters.value.filterByTag || undefined,
+        searchBy: filters.value.filterByTitle || undefined,
     };
 
     const bookmarksResponse = await bookmarkStore.fetchBookmarks(options);
 
     bookmarks.value = bookmarksResponse ?? null;
-}
+}, 500);
 
 onMounted(async () => {
     const promises = await Promise.all([bookmarkStore.fetchBookmarks(), tagStore.fetchTags()]);
@@ -47,6 +51,16 @@ onMounted(async () => {
         <div class="py-3">
             <p class="prose mb-2 font-bold">Filters</p>
             <div class="flex flex-wrap gap-3">
+                <input
+                    @input="
+                        filters.filterByTitle.length > 2 || filters.filterByTitle.length === 0
+                            ? handleUpdateTable()
+                            : null
+                    "
+                    v-model="filters.filterByTitle"
+                    class="input input-bordered input-sm"
+                    placeholder="Seach by title"
+                />
                 <select
                     @change="
                         filters.currentPage = 1;

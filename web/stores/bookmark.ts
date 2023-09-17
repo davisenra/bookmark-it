@@ -5,6 +5,7 @@ export type FetchBookmarksOptions = {
     visitedOnly?: 0 | 1;
     page?: number;
     perPage?: number;
+    searchBy?: string;
     sortBy?: string;
     sortDirection?: "asc" | "desc";
     tag?: string;
@@ -24,6 +25,7 @@ export const useBookmarkStore = defineStore("bookmark", () => {
         sortBy = "created_at",
         sortDirection = "desc",
         tag = undefined,
+        searchBy = undefined,
     }: FetchBookmarksOptions = {}) {
         const queryParams = new URLSearchParams({
             page: page.toString(),
@@ -34,6 +36,10 @@ export const useBookmarkStore = defineStore("bookmark", () => {
 
         if (tag !== undefined) {
             queryParams.append("tag", tag);
+        }
+
+        if (searchBy !== undefined) {
+            queryParams.append("search_by", searchBy);
         }
 
         try {
