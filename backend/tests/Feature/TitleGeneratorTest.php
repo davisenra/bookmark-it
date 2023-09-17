@@ -37,7 +37,7 @@ class TitleGeneratorTest extends TestCase
 
     public function test_it_requires_authentication()
     {
-        $url = self::BASE_ENDPOINT . '?url=https://github.com';
+        $url = self::BASE_ENDPOINT.'?url=https://github.com';
 
         $this->getJson($url)->assertUnauthorized();
     }
@@ -46,13 +46,13 @@ class TitleGeneratorTest extends TestCase
     {
         $this->login();
 
-        $url = self::BASE_ENDPOINT . '?url=https://github.com';
+        $url = self::BASE_ENDPOINT.'?url=https://github.com';
 
         $this->getJson($url)
             ->assertOk()
             ->assertJsonIsObject()
             ->assertExactJson([
-                'data' => ['title' => 'Github']
+                'data' => ['title' => 'Github'],
             ]);
     }
 
@@ -60,7 +60,7 @@ class TitleGeneratorTest extends TestCase
     {
         $this->login();
 
-        $url = self::BASE_ENDPOINT . '?url=thisisnotanurl';
+        $url = self::BASE_ENDPOINT.'?url=thisisnotanurl';
 
         $this->getJson($url)->assertUnprocessable();
     }

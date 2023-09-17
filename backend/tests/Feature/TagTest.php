@@ -55,7 +55,7 @@ class TagTest extends TestCase
                 'data' => [
                     'id' => 1,
                     'name' => 'An important tag',
-                ]
+                ],
             ]);
     }
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controllers\V1;
 
 use App\Models\Tag;
-use App\Resources\BookmarkResource;
 use App\Resources\TagResource;
 use App\Services\BookmarkService;
 use Illuminate\Http\JsonResponse;

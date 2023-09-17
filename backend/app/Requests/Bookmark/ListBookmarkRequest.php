@@ -16,6 +16,7 @@ class ListBookmarkRequest extends FormRequest
         return [
             'tag' => ['string'],
             'visited_only' => ['boolean'],
+            'search_by' => ['string'],
             'sort_by' => ['string', 'in:visited_at,created_at'],
             'sort_direction' => ['string', 'in:asc,desc'],
             'per_page' => ['integer', 'min:15', 'max:50'],

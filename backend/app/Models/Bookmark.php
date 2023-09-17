@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Bookmark extends Model
 {
-    use HasUuids;
     use HasFactory;
+    use HasUuids;
 
     protected $fillable = [
         'user_id',

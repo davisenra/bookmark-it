@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\DTOs\ListBookmarkDto;
 use App\Models\Bookmark;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -17,33 +18,35 @@ class BookmarkService
     }
 
     /**
-     * @param User $user
-     * @param string[] $options
      * @return LengthAwarePaginator<Bookmark>
      */
-    public function allBookmarksPaginatedByUser(User $user, array $options = []): LengthAwarePaginator
+    public function allBookmarksPaginatedByUser(User $user, ListBookmarkDto $options): LengthAwarePaginator
     {
-        $paginationSize = isset($options['per_page']) ? (int) $options['per_page'] : 15;
+        $paginationSize = $options->perPage;
 
         $queryBuilder = Bookmark::query()
             ->where('user_id', $user->id)
             ->with('tags');
 
-        if (isset($options['visited_only'])) {
-            $options['visited_only']
+        if ($options->visitedOnly !== null) {
+            $options->visitedOnly
                 ? $queryBuilder->whereNotNull('visited_at')
                 : $queryBuilder->whereNull('visited_at');
         }
 
-        if (isset($options['sort_by'])) {
-            $orderDirection = $options['sort_direction'] ?? 'DESC';
-            $queryBuilder->orderBy($options['sort_by'], $orderDirection);
+        if ($options->searchBy !== null) {
+            $queryBuilder->where('title', 'LIKE', "%$options->searchBy%");
+        }
+
+        if ($options->sortBy !== null) {
+            $orderDirection = $options->sortDirection ?? 'DESC';
+            $queryBuilder->orderBy($options->sortBy, $orderDirection);
         } else {
             $queryBuilder->orderBy('created_at', 'DESC');
         }
 
-        if (isset($options['tag'])) {
-            $tagName = $options['tag'];
+        if ($options->tag !== null) {
+            $tagName = $options->tag;
             $queryBuilder->whereHas('tags', function ($query) use ($tagName) {
                 $query->where('name', $tagName);
             });
@@ -64,9 +67,7 @@ class BookmarkService
     }
 
     /**
-     * @param User $user
-     * @param array<string, mixed> $validatedData
-     * @return Bookmark
+     * @param  array<string, mixed>  $validatedData
      */
     public function createBookmark(User $user, array $validatedData): Bookmark
     {
@@ -77,7 +78,7 @@ class BookmarkService
         $bookmark->user()->associate($user);
         $bookmark->save();
 
-        $bookmarkHasTags = !empty($validatedData['tags']);
+        $bookmarkHasTags = ! empty($validatedData['tags']);
 
         if ($bookmarkHasTags) {
             $tagsIds = array_map(fn ($tag) => $tag['id'], $validatedData['tags']);
@@ -98,6 +99,7 @@ class BookmarkService
     {
         if ($bookmark->visited_at !== null) {
             $bookmark->update(['visited_at' => null]);
+
             return;
         }
 
@@ -105,15 +107,13 @@ class BookmarkService
     }
 
     /**
-     * @param Bookmark|null $bookmark
-     * @param array<string, mixed> $validatedData
-     * @return void
+     * @param  array<string, mixed>  $validatedData
      */
     public function updateBookmark(?Bookmark $bookmark, array $validatedData): void
     {
         $bookmark->update($validatedData);
 
-        $bookmarkHasTags = !empty($validatedData['tags']);
+        $bookmarkHasTags = ! empty($validatedData['tags']);
 
         if ($bookmarkHasTags) {
             $tagsIds = array_map(fn ($tag) => $tag['id'], $validatedData['tags']);

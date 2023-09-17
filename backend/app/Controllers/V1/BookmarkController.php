@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers\V1;
 
+use App\DTOs\ListBookmarkDto;
 use App\Models\User;
 use App\Requests\Bookmark\CreateBookmarkRequest;
 use App\Requests\Bookmark\ListBookmarkRequest;
@@ -26,7 +27,8 @@ class BookmarkController
     {
         /** @var User $user */
         $user = $request->user();
-        $userBookmarks = $this->bookmarkService->allBookmarksPaginatedByUser($user, $request->validated());
+        $listBookmarkDto = ListBookmarkDto::fromRequest($request);
+        $userBookmarks = $this->bookmarkService->allBookmarksPaginatedByUser($user, $listBookmarkDto);
 
         return BookmarkResource::collection($userBookmarks);
     }

@@ -23,10 +23,10 @@ class BookmarkTest extends TestCase
     {
         $this->getJson(self::BASE_ENDPOINT)->assertUnauthorized();
         $this->postJson(self::BASE_ENDPOINT)->assertUnauthorized();
-        $this->postJson(self::BASE_ENDPOINT . '/1')->assertUnauthorized();
-        $this->getJson(self::BASE_ENDPOINT . '/1')->assertUnauthorized();
-        $this->deleteJson(self::BASE_ENDPOINT . '/1')->assertUnauthorized();
-        $this->patchJson(self::BASE_ENDPOINT . '/1/visited')->assertUnauthorized();
+        $this->postJson(self::BASE_ENDPOINT.'/1')->assertUnauthorized();
+        $this->getJson(self::BASE_ENDPOINT.'/1')->assertUnauthorized();
+        $this->deleteJson(self::BASE_ENDPOINT.'/1')->assertUnauthorized();
+        $this->patchJson(self::BASE_ENDPOINT.'/1/visited')->assertUnauthorized();
     }
 
     public function test_bookmark_collection_is_returned()
@@ -73,7 +73,7 @@ class BookmarkTest extends TestCase
 
         $this->assertCount(10, $user->bookmarks);
 
-        $this->getJson(self::BASE_ENDPOINT . '?' . Arr::query(['tag' => $userTags[0]->name]))
+        $this->getJson(self::BASE_ENDPOINT.'?'.Arr::query(['tag' => $userTags[0]->name]))
             ->assertOk()
             ->assertJsonCount(5, 'data');
     }
@@ -134,7 +134,7 @@ class BookmarkTest extends TestCase
         $this->patchJson($endpoint)
             ->assertNoContent();
 
-        $this->getJson(self::BASE_ENDPOINT . "/{$bookmark->id}")
+        $this->getJson(self::BASE_ENDPOINT."/{$bookmark->id}")
             ->assertOk()
             ->assertJsonPath('data.visited', true);
     }
@@ -144,7 +144,7 @@ class BookmarkTest extends TestCase
         $user = $this->login();
         $bookmark = $user->bookmarks()->save(Bookmark::factory()->make());
 
-        $this->deleteJson(self::BASE_ENDPOINT . "/{$bookmark->id}")
+        $this->deleteJson(self::BASE_ENDPOINT."/{$bookmark->id}")
             ->assertNoContent();
 
         $this->assertCount(0, $user->bookmarks);
@@ -160,9 +160,31 @@ class BookmarkTest extends TestCase
             'description' => 'A new description',
         ];
 
-        $this->postJson(self::BASE_ENDPOINT . "/{$bookmark->id}", $payload)
+        $this->postJson(self::BASE_ENDPOINT."/{$bookmark->id}", $payload)
             ->assertOk()
             ->assertJsonPath('data.title', $payload['title'])
             ->assertJsonPath('data.description', $payload['description']);
+    }
+
+    public function test_can_filter_by_bookmark_title()
+    {
+        $user = $this->login();
+        $user->bookmarks()->saveMany(Bookmark::factory(5)->make());
+
+        $this->postJson(self::BASE_ENDPOINT, [
+            'title' => 'A very specific title',
+            'url' => 'https://veryimportantwebsite.com',
+        ]);
+
+        $this->postJson(self::BASE_ENDPOINT, [
+            'title' => 'A kinda of specific title',
+            'url' => 'https://veryimportantwebsite.com',
+        ]);
+
+        $response = $this->getJson(self::BASE_ENDPOINT.'?'.Arr::query(['search_by' => 'specific title']));
+        $response->assertOk();
+        $response->assertJsonCount(2, 'data');
+        $response->assertJsonPath('data.0.title', 'A very specific title');
+        $response->assertJsonPath('data.1.title', 'A kinda of specific title');
     }
 }

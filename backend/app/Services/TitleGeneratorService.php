@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Psr\Http\Client\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
+use Psr\Http\Client\ClientInterface;
 use Psr\Log\LoggerInterface;
 
 final class TitleGeneratorService
@@ -22,6 +22,7 @@ final class TitleGeneratorService
             $response = $this->httpClient->request('GET', $url);
         } catch (GuzzleException $e) {
             $this->logger->error($e->getMessage());
+
             return null;
         }
 

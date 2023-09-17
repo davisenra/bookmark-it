@@ -20,7 +20,7 @@ class TitleGeneratorController
         $url = $request->validated('url');
         $title = $this->titleGeneratorService->generate($url);
 
-        if (!$title) {
+        if (! $title) {
             return new JsonResponse(['data' => ['title' => null]], 400);
         }
 
