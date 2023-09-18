@@ -35,7 +35,9 @@ class BookmarkService
         }
 
         if ($options->searchBy !== null) {
-            $queryBuilder->where('title', 'LIKE', "%$options->searchBy%");
+            $queryBuilder->whereRaw('LOWER(title) LIKE ?', [
+                "%$options->searchBy%"
+            ]);
         }
 
         if ($options->sortBy !== null) {
