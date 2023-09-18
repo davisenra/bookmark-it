@@ -1,18 +1,31 @@
 import { defineStore } from "pinia";
-import { TagResponse } from "types/types";
+import { Tag, TagResponse } from "types/types";
+import { Ref } from "vue";
 
 export const useTagStore = defineStore("tag", () => {
+    const tags: Ref<Tag[]> = ref([]);
+    const tagsHaveBeenFetched = ref(false);
+
+    function getTags() {
+        if (tagsHaveBeenFetched.value === false) {
+            fetchTags();
+        }
+
+        return tags;
+    }
+
     async function fetchTags() {
         try {
             const res = await useApiFetch(`/v1/tags`);
-            const data: TagResponse = await res?.json();
-            return data;
+            const { data }: TagResponse = await res?.json();
+            tags.value = data;
+            tagsHaveBeenFetched.value = true;
         } catch (err) {
             console.error(err);
         }
     }
 
-    async function createTag(payload: { name: string }): Promise<void> {
+    async function createTag(payload: { name: string }) {
         try {
             await useApiFetch(`/v1/tags`, {
                 method: "POST",
@@ -23,7 +36,7 @@ export const useTagStore = defineStore("tag", () => {
         }
     }
 
-    async function deleteTag(id: number): Promise<void> {
+    async function deleteTag(id: number) {
         try {
             await useApiFetch(`/v1/tags/${id}`, {
                 method: "DELETE",
@@ -34,6 +47,7 @@ export const useTagStore = defineStore("tag", () => {
     }
 
     return {
+        getTags,
         fetchTags,
         createTag,
         deleteTag,

@@ -4,17 +4,13 @@ import { useTagStore } from "@/stores/tag";
 import { onMounted } from "vue";
 
 const tagStore = useTagStore();
-const tags = ref<TagResponse | null>(null);
+const tags = tagStore.getTags();
 
 const availableTags = computed(() => {
-    return tags.value?.data?.sort((a, b) => a.name.localeCompare(b.name));
+    return tags.value?.sort((a, b) => a.name.localeCompare(b.name));
 });
 
 const { pickedTagsBag } = defineProps<{ pickedTagsBag: Tag[] }>();
-
-onMounted(async () => {
-    tags.value = (await tagStore.fetchTags()) || null;
-});
 
 function toggleTagPicked(tag: Tag): void {
     const index = pickedTagsBag.findIndex((t) => t.id === tag.id);

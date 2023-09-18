@@ -12,7 +12,7 @@ const bookmarkStore = useBookmarkStore();
 const bookmarks = ref<BookmarkResponse | null>(null);
 
 const tagStore = useTagStore();
-const tags = ref();
+const tags = tagStore.getTags();
 
 const filters = ref({
     currentPage: 1,
@@ -38,9 +38,7 @@ const handleUpdateTable = debounce(async function () {
 }, 500);
 
 onMounted(async () => {
-    const promises = await Promise.all([bookmarkStore.fetchBookmarks(), tagStore.fetchTags()]);
-    bookmarks.value = promises[0] ?? null;
-    tags.value = promises[1] ?? null;
+    bookmarks.value = (await bookmarkStore.fetchBookmarks()) || null;
 });
 </script>
 
@@ -70,7 +68,7 @@ onMounted(async () => {
                     class="select select-bordered select-sm"
                 >
                     <option :value="null" selected>Tag</option>
-                    <option :value="tag.name" v-for="tag in tags?.data">
+                    <option :value="tag.name" v-for="tag in tags">
                         {{ tag.name }}
                     </option>
                 </select>

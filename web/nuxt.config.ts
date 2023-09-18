@@ -5,6 +5,20 @@ export default defineNuxtConfig({
     app: {
         head: {
             title: "Bookmark It",
+            link: [
+                {
+                    rel: "preconnect",
+                    href: "https://fonts.googleapis.com",
+                },
+                {
+                    rel: "preconnect",
+                    href: "https://fonts.gstatic.com",
+                },
+                {
+                    rel: "stylesheet",
+                    href: "https://fonts.googleapis.com/css2?family=Inter&display=swap",
+                },
+            ],
         },
         pageTransition: { name: "page", mode: "out-in" },
     },

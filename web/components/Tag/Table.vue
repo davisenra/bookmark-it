@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import { useTagStore } from "@/stores/tag";
-import { TagResponse } from "~/types/types";
+import { Tag } from "~/types/types";
 
 const tagStore = useTagStore();
-const tags = ref<TagResponse | null>(null);
-
-onMounted(async () => {
-    tags.value = (await tagStore.fetchTags()) ?? null;
-});
+const tags = tagStore.getTags();
 
 function sortTagsAlphabetically() {
-    tags?.value?.data.sort((a, b) => a.name.localeCompare(b.name));
+    tags?.value?.sort((a: Tag, b: Tag) => a.name.localeCompare(b.name));
 }
 
 async function handleTagDelete(id: number): Promise<void> {
@@ -30,7 +26,7 @@ async function handleTagDelete(id: number): Promise<void> {
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="tag in tags?.data" :key="tag.id" class="hover">
+                <tr v-for="tag in tags" :key="tag.id" v-if="tags" class="hover">
                     <th>{{ tag.id }}</th>
                     <td>{{ tag.name }}</td>
                     <td>
