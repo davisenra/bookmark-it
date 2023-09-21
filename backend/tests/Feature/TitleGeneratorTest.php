@@ -32,7 +32,6 @@ class TitleGeneratorTest extends TestCase
         $client = new Client(['handler' => $handlerStack]);
 
         $this->instance(ClientInterface::class, $client);
-
     }
 
     public function test_it_requires_authentication()
