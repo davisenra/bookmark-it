@@ -20,7 +20,9 @@ class BookmarkFactory extends Factory
             'title' => fake()->sentence(4),
             'description' => fake()->sentence(12),
             'url' => fake()->url(),
-            'visited_at' => $this->faker->boolean(50) ? $this->faker->dateTime() : null,
+            'visited_at' => $this->faker->boolean(50)
+                ? $this->faker->dateTimeBetween('-2 weeks')
+                : null,
         ];
     }
 }

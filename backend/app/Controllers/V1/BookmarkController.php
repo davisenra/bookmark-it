@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controllers\V1;
 
+use App\DTOs\CreateBookmarkDto;
 use App\DTOs\ListBookmarkDto;
+use App\DTOs\UpdateBookmarkDto;
 use App\Models\User;
 use App\Requests\Bookmark\CreateBookmarkRequest;
 use App\Requests\Bookmark\ListBookmarkRequest;
@@ -51,9 +53,9 @@ class BookmarkController
     {
         /** @var User $user */
         $user = $request->user();
-        $validatedData = $request->validated();
+        $createBookmarkDto = CreateBookmarkDto::fromRequest($request);
 
-        $bookmark = $this->bookmarkService->createBookmark($user, $validatedData);
+        $bookmark = $this->bookmarkService->createBookmark($user, $createBookmarkDto);
 
         return (new BookmarkResource($bookmark))
             ->response()
@@ -66,7 +68,8 @@ class BookmarkController
         $user = $request->user();
 
         $bookmark = $this->bookmarkService->getUserBookmarkById($user, $id);
-        $this->bookmarkService->updateBookmark($bookmark, $request->validated());
+        $updateBookmarkDto = UpdateBookmarkDto::fromRequest($request);
+        $this->bookmarkService->updateBookmark($bookmark, $updateBookmarkDto);
 
         return (new BookmarkResource($bookmark))
             ->response()
@@ -100,7 +103,7 @@ class BookmarkController
             return new Response(null, 404);
         }
 
-        $this->bookmarkService->setAsVisited($bookmark);
+        $this->bookmarkService->toggleVisitedStatus($bookmark);
 
         return new Response(null, 204);
     }

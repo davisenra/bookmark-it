@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\DTOs\CreateBookmarkDto;
 use App\DTOs\ListBookmarkDto;
+use App\DTOs\UpdateBookmarkDto;
 use App\Models\Bookmark;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -68,22 +70,19 @@ class BookmarkService
         return null;
     }
 
-    /**
-     * @param  array<string, mixed>  $validatedData
-     */
-    public function createBookmark(User $user, array $validatedData): Bookmark
+    public function createBookmark(User $user, CreateBookmarkDto $createBookmark): Bookmark
     {
         $bookmark = new Bookmark();
-        $bookmark->title = $validatedData['title'];
-        $bookmark->description = $validatedData['description'] ?? null;
-        $bookmark->url = $validatedData['url'];
+        $bookmark->title = $createBookmark->title;
+        $bookmark->description = $createBookmark->description ?? null;
+        $bookmark->url = $createBookmark->url;
         $bookmark->user()->associate($user);
         $bookmark->save();
 
-        $bookmarkHasTags = ! empty($validatedData['tags']);
+        $bookmarkHasTags = !empty($validatedData['tags']);
 
         if ($bookmarkHasTags) {
-            $tagsIds = array_map(fn ($tag) => $tag['id'], $validatedData['tags']);
+            $tagsIds = $createBookmark->tagsIds;
             $tags = $user->tags()->whereIn('id', $tagsIds)->get();
             $bookmark->tags()->sync($tags);
         }
@@ -97,7 +96,7 @@ class BookmarkService
         $bookmark->delete();
     }
 
-    public function setAsVisited(?Bookmark $bookmark): void
+    public function toggleVisitedStatus(Bookmark $bookmark): void
     {
         if ($bookmark->visited_at !== null) {
             $bookmark->update(['visited_at' => null]);
@@ -108,17 +107,20 @@ class BookmarkService
         $bookmark->update(['visited_at' => new \DateTimeImmutable('now')]);
     }
 
-    /**
-     * @param  array<string, mixed>  $validatedData
-     */
-    public function updateBookmark(?Bookmark $bookmark, array $validatedData): void
+    public function updateBookmark(Bookmark $bookmark, UpdateBookmarkDto $updateBookmark): void
     {
-        $bookmark->update($validatedData);
+        $attributesToUpdate = [
+            'title' => $updateBookmark->title,
+            'url' => $updateBookmark->url,
+            'description' => $updateBookmark->description,
+        ];
 
-        $bookmarkHasTags = ! empty($validatedData['tags']);
+        $bookmark->update(array_filter($attributesToUpdate));
+
+        $bookmarkHasTags = !empty($validatedData['tags']);
 
         if ($bookmarkHasTags) {
-            $tagsIds = array_map(fn ($tag) => $tag['id'], $validatedData['tags']);
+            $tagsIds = $updateBookmark->tagsIds;
             $tags = $bookmark->user->tags()->whereIn('id', $tagsIds)->get();
             $bookmark->tags()->toggle($tags);
         }
