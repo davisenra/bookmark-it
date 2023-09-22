@@ -134,7 +134,7 @@ class BookmarkTest extends TestCase
         $this->patchJson($endpoint)
             ->assertNoContent();
 
-        $this->getJson(self::BASE_ENDPOINT."/{$bookmark->id}")
+        $this->getJson(self::BASE_ENDPOINT."/$bookmark->id")
             ->assertOk()
             ->assertJsonPath('data.visited', true);
     }
@@ -144,7 +144,7 @@ class BookmarkTest extends TestCase
         $user = $this->login();
         $bookmark = $user->bookmarks()->save(Bookmark::factory()->make());
 
-        $this->deleteJson(self::BASE_ENDPOINT."/{$bookmark->id}")
+        $this->deleteJson(self::BASE_ENDPOINT."/$bookmark->id")
             ->assertNoContent();
 
         $this->assertCount(0, $user->bookmarks);
@@ -160,7 +160,7 @@ class BookmarkTest extends TestCase
             'description' => 'A new description',
         ];
 
-        $this->postJson(self::BASE_ENDPOINT."/{$bookmark->id}", $payload)
+        $this->postJson(self::BASE_ENDPOINT."/$bookmark->id", $payload)
             ->assertOk()
             ->assertJsonPath('data.title', $payload['title'])
             ->assertJsonPath('data.description', $payload['description']);
@@ -186,5 +186,23 @@ class BookmarkTest extends TestCase
         $response->assertJsonCount(2, 'data');
         $response->assertJsonPath('data.0.title', 'A very specific title');
         $response->assertJsonPath('data.1.title', 'A kinda of specific title');
+    }
+
+    public function test_bookmark_can_be_created_with_tags()
+    {
+        $user = $this->login();
+        $tag = $user->tags()->save(Tag::factory()->make());
+
+        $response = $this->postJson(self::BASE_ENDPOINT, [
+            'title' => 'A very specific title',
+            'url' => 'https://veryimportantwebsite.com',
+            'tags' => [
+                ['id' => $tag->id],
+            ],
+        ]);
+
+        $response->assertCreated();
+        $response->assertJsonPath('data.title', 'A very specific title');
+        $response->assertJsonPath('data.tags.0.name', $tag->name);
     }
 }

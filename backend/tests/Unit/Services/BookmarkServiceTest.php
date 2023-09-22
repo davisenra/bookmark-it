@@ -53,11 +53,15 @@ class BookmarkServiceTest extends TestCase
     public function test_can_create_a_bookmark()
     {
         $user = User::factory()->create();
+        $tag = $user->tags()->create([
+            'name' => 'tag1',
+        ]);
 
         $createBookmarkDto = new CreateBookmarkDto(
             'A random title',
             'https://github.com/davisenra/bookmark-it',
             'Random description',
+            [$tag->id]
         );
 
         $bookmarkService = new BookmarkService();
@@ -69,6 +73,7 @@ class BookmarkServiceTest extends TestCase
         $this->assertTrue($bookmark->title === 'A random title');
         $this->assertTrue($bookmark->url === 'https://github.com/davisenra/bookmark-it');
         $this->assertTrue($bookmark->id === $sameBookmark->id);
+        $this->assertCount(1, $bookmark->tags);
     }
 
     public function test_it_can_delete_a_bookmark()
