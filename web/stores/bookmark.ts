@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { BookmarkResponse, Tag } from "@/types/types";
+import { Bookmark, BookmarkCollectionResponse, BookmarkResponse, Tag } from "@/types/types";
 
 export type FetchBookmarksOptions = {
     visitedOnly?: 0 | 1;
@@ -19,6 +19,13 @@ export type CreateBookmarkPayload = {
 };
 
 export const useBookmarkStore = defineStore("bookmark", () => {
+    async function fetchBookmarkById(bookmarkId: string) {
+        const res = await useApiFetch(`/v1/bookmarks/${bookmarkId}`);
+        const { data } = (await res?.json()) as BookmarkResponse;
+
+        return data;
+    }
+
     async function fetchBookmarks({
         page = 1,
         perPage = 30,
@@ -44,10 +51,25 @@ export const useBookmarkStore = defineStore("bookmark", () => {
 
         try {
             const res = await useApiFetch(`/v1/bookmarks?${queryParams.toString()}`);
-            return (await res?.json()) as BookmarkResponse;
+            return (await res?.json()) as BookmarkCollectionResponse;
         } catch (err) {
             console.error(err);
         }
+    }
+
+    async function updateBookmark(bookmark: Bookmark) {
+        const payload = {
+            title: bookmark.title,
+            description: bookmark.description,
+            tags: bookmark.tags.map((tag) => {
+                return { id: tag.id };
+            }),
+        };
+
+        await useApiFetch(`/v1/bookmarks/${bookmark.id}`, {
+            method: "POST",
+            body: JSON.stringify(payload),
+        });
     }
 
     async function createBookmark(payload: CreateBookmarkPayload) {
@@ -84,7 +106,9 @@ export const useBookmarkStore = defineStore("bookmark", () => {
     }
 
     return {
+        fetchBookmarkById,
         fetchBookmarks,
+        updateBookmark,
         createBookmark,
         deleteBookmark,
         markBookmarkAsVisited,

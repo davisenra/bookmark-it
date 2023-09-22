@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { FetchBookmarksOptions, useBookmarkStore } from "@/stores/bookmark";
-import { BookmarkResponse } from "@/types/types";
+import { BookmarkCollectionResponse } from "@/types/types";
 import { useTagStore } from "@/stores/tag";
 import { debounce } from "debounce";
 
@@ -9,7 +9,7 @@ definePageMeta({
 });
 
 const bookmarkStore = useBookmarkStore();
-const bookmarks = ref<BookmarkResponse | null>(null);
+const bookmarks = ref<BookmarkCollectionResponse | null>(null);
 
 const tagStore = useTagStore();
 const tags = tagStore.getTags();

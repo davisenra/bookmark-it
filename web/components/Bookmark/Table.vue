@@ -57,9 +57,9 @@ async function handleDeleteBookmark(bookmark: Bookmark) {
                     </td>
                     <td>
                         <div class="flex space-x-2">
-                            <a :href="bookmark.url" class="btn btn-sm" target="_blank">
-                                <Icon name="ph:link" size="18" />
-                            </a>
+                            <router-link :to="'/bookmarks/' + bookmark.id" class="btn btn-sm">
+                                <Icon name="ph:note-pencil" size="16" />
+                            </router-link>
                             <ButtonConfirm @confirm="handleMarkAsVisited(bookmark)" />
                             <ButtonDelete @delete="handleDeleteBookmark(bookmark)" />
                         </div>

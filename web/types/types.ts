@@ -1,3 +1,5 @@
+import exp from "constants";
+
 export type ApiResponseMetada = {
     links: {
         first: string;
@@ -42,6 +44,10 @@ export type Bookmark = {
     updated_at: string;
 };
 
-export type BookmarkResponse = ApiResponseMetada & {
+export type BookmarkResponse = {
+    data: Bookmark;
+};
+
+export type BookmarkCollectionResponse = ApiResponseMetada & {
     data: Bookmark[];
 };

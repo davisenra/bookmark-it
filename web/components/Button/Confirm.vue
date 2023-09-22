@@ -24,10 +24,10 @@ function startDeleteTimer(): void {
 <template>
     <div>
         <button v-if="!confirmAction" @click="handleClick" class="btn btn-sm">
-            <Icon name="ph:check-square-bold" />
+            <Icon name="material-symbols:done" size="16" />
         </button>
         <button v-else @click="handleSecondClick" class="btn btn-success btn-sm" :disabled="isSending">
-            <Icon name="ph:check-bold" />
+            <Icon name="ph:check-bold" size="16" />
         </button>
     </div>
 </template>
