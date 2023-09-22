@@ -79,7 +79,7 @@ class BookmarkService
         $bookmark->user()->associate($user);
         $bookmark->save();
 
-        $bookmarkHasTags = !empty($validatedData['tags']);
+        $bookmarkHasTags = !empty($createBookmark->tagsIds);
 
         if ($bookmarkHasTags) {
             $tagsIds = $createBookmark->tagsIds;
@@ -117,12 +117,12 @@ class BookmarkService
 
         $bookmark->update(array_filter($attributesToUpdate));
 
-        $bookmarkHasTags = !empty($validatedData['tags']);
+        $bookmarkHasTags = !empty($updateBookmark->tagsIds);
 
         if ($bookmarkHasTags) {
             $tagsIds = $updateBookmark->tagsIds;
             $tags = $bookmark->user->tags()->whereIn('id', $tagsIds)->get();
-            $bookmark->tags()->toggle($tags);
+            $bookmark->tags()->sync($tags);
         }
     }
 }
