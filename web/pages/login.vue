@@ -85,9 +85,9 @@ function resetForm(): void {
                 </button>
             </div>
         </form>
-        <!-- <div class="divider my-2"></div> -->
-        <!-- <div class="mb-3 text-center"> -->
-        <!-- <NuxtLink to="/signup" class="link">Sign up</NuxtLink> -->
-        <!-- </div> -->
+        <div class="divider my-2"></div>
+        <div class="mb-3 text-center">
+            <NuxtLink to="/signup" class="link">Sign up</NuxtLink>
+        </div>
     </div>
 </template>

@@ -5,20 +5,6 @@ export default defineNuxtConfig({
     app: {
         head: {
             title: "Bookmark It",
-            link: [
-                {
-                    rel: "preconnect",
-                    href: "https://fonts.googleapis.com",
-                },
-                {
-                    rel: "preconnect",
-                    href: "https://fonts.gstatic.com",
-                },
-                {
-                    rel: "stylesheet",
-                    href: "https://fonts.googleapis.com/css2?family=Inter&display=swap",
-                },
-            ],
         },
         pageTransition: { name: "page", mode: "out-in" },
     },
@@ -29,5 +15,20 @@ export default defineNuxtConfig({
         },
     },
     devtools: { enabled: false },
-    modules: ["@pinia/nuxt", "@pinia-plugin-persistedstate/nuxt", "@nuxtjs/tailwindcss", "nuxt-icon"],
+    modules: ["@pinia/nuxt", "@pinia-plugin-persistedstate/nuxt", "@nuxtjs/tailwindcss", "nuxt-icon", "@formkit/nuxt"],
+    tailwindcss: {
+        config: {
+            content: ["./formkit.theme.js"],
+            theme: {
+                extend: {},
+            },
+            plugins: [require("@formkit/themes/tailwindcss"), require("@tailwindcss/typography"), require("daisyui")],
+            daisyui: {
+                themes: ["light"],
+            },
+        },
+    },
+    formkit: {
+        configFile: "formkit.config.js",
+    },
 });
