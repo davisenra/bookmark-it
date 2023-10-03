@@ -38,10 +38,37 @@ export const useAuthStore = defineStore(
             navigateTo("login");
         }
 
+        async function register(credentials: {
+            name: string;
+            email: string;
+            password: string;
+            password_confirmation: string;
+        }) {
+            await csrfToken();
+
+            const res = await useApiFetch(`/register`, {
+                method: "POST",
+                body: JSON.stringify(credentials),
+            });
+
+            if (res?.status === 204) {
+                isAuthenticated.value = true;
+                navigateTo("/");
+                return;
+            }
+
+            if (res?.status === 422) {
+                throw Error("Invalid credentials");
+            }
+
+            throw Error("Internal server error");
+        }
+
         return {
             isAuthenticated,
             login,
             logout,
+            register,
         };
     },
     {
