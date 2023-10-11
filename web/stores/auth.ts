@@ -51,14 +51,15 @@ export const useAuthStore = defineStore(
                 body: JSON.stringify(credentials),
             });
 
-            if (res?.status === 204) {
+            if (res?.ok) {
                 isAuthenticated.value = true;
                 navigateTo("/");
                 return;
             }
 
             if (res?.status === 422) {
-                throw Error("Invalid credentials");
+                const { message } = await res.json();
+                throw Error(message);
             }
 
             throw Error("Internal server error");

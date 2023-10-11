@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAuthStore } from "@/stores/auth";
+import { AlertType, pushAlert } from "@/composables/useAlert";
 
 definePageMeta({
     middleware: "guest",
@@ -23,8 +24,11 @@ async function submit(data: RegistrationPayload) {
             password: data.password,
             password_confirmation: data.password_confirm,
         });
-    } catch (error) {
-        console.log(error);
+    } catch (error: any) {
+        pushAlert({
+            message: error.message,
+            type: AlertType.ERROR,
+        });
     }
 }
 </script>
