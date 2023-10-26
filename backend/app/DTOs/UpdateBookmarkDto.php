@@ -10,7 +10,6 @@ class UpdateBookmarkDto
 {
     public function __construct(
         public readonly ?string $title = null,
-        public readonly ?string $url = null,
         public readonly ?string $description = null,
         /** @var int[] $tagsIds */
         public readonly array $tagsIds = []
@@ -27,7 +26,6 @@ class UpdateBookmarkDto
 
         return new self(
             title: $validatedData['title'] ?? null,
-            url: $validatedData['url'] ?? null,
             description: $validatedData['description'] ?? null,
             tagsIds: $tagsIds ?? [],
         );

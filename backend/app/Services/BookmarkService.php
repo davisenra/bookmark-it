@@ -109,13 +109,10 @@ class BookmarkService
 
     public function updateBookmark(Bookmark $bookmark, UpdateBookmarkDto $updateBookmark): void
     {
-        $attributesToUpdate = [
+        $bookmark->update([
             'title' => $updateBookmark->title,
-            'url' => $updateBookmark->url,
-            'description' => $updateBookmark->description,
-        ];
-
-        $bookmark->update(array_filter($attributesToUpdate));
+            'description' => $updateBookmark->description ?? null,
+        ]);
 
         $bookmarkHasTags = !empty($updateBookmark->tagsIds);
 

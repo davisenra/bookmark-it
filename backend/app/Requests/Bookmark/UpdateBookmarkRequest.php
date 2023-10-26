@@ -15,8 +15,7 @@ class UpdateBookmarkRequest extends FormRequest
     {
         return [
             'title' => ['string', 'max:120'],
-            'description' => ['string', 'max:255'],
-            'url' => ['string', 'url', 'max:255'],
+            'description' => ['max:255'],
             'tags' => ['array'],
             'tags.*.id' => ['exists:App\Models\Tag,id'],
         ];

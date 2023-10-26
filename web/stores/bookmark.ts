@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { Bookmark, BookmarkCollectionResponse, BookmarkResponse, Tag } from "@/types/types";
+import { AlertType, pushAlert } from "@/composables/useAlert";
 
 export type FetchBookmarksOptions = {
     visitedOnly?: 0 | 1;
@@ -79,18 +80,27 @@ export const useBookmarkStore = defineStore("bookmark", () => {
             };
         });
 
-        try {
-            await useApiFetch(`/v1/bookmarks`, {
-                method: "POST",
-                body: JSON.stringify({
-                    ...payload,
-                    ...(payload.description === "" && { description: undefined }),
-                    tags: tagsToApi,
-                }),
-            });
-        } catch (err) {
-            console.error(err);
+        const res = await useApiFetch(`/v1/bookmarks`, {
+            method: "POST",
+            body: JSON.stringify({
+                ...payload,
+                ...(payload.description === "" && { description: undefined }),
+                tags: tagsToApi,
+            }),
+        });
+
+        if (res?.ok) {
+            pushAlert({ message: "Bookmark created successfully", type: AlertType.SUCCESS });
+            return;
         }
+
+        if (res?.status === 422) {
+            const { message } = await res?.json();
+
+            throw new Error(message);
+        }
+
+        throw new Error("Internal server error");
     }
 
     async function deleteBookmark(id: string) {

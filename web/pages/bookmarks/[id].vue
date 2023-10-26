@@ -19,6 +19,7 @@ async function handleBookmarkEditAction() {
     }
 
     bookmark.value = await bookmarkStore.fetchBookmarkById(bookmarkId);
+    pushAlert({ message: "Bookmark updated successfully", type: AlertType.SUCCESS });
     isSending.value = false;
 }
 
@@ -58,7 +59,7 @@ onMounted(async () => {
                     <label class="label">
                         <span class="label-text">Description </span>
                     </label>
-                    <textarea v-model="bookmark.description" class="textarea textarea-bordered"></textarea>
+                    <input type="text" v-model="bookmark.description" class="textarea textarea-bordered" />
                 </div>
                 <div class="form-control w-full">
                     <label class="label">
