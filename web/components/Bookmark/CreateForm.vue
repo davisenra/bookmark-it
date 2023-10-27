@@ -33,6 +33,12 @@ async function handleBookmarkCreation(): Promise<void> {
 async function generateTitle() {
     isFetchingTitle.value = true;
 
+    if (bookmark.value.url === "") {
+        isFetchingTitle.value = false;
+        pushAlert({ message: "URL is required", type: AlertType.ERROR });
+        return;
+    }
+
     const newTitle = await useTitleGenerator(bookmark.value.url);
 
     if (newTitle === null) {
@@ -49,19 +55,13 @@ async function generateTitle() {
 <template>
     <FormKit type="form" :actions="false" @submit="handleBookmarkCreation">
         <FormKit validation="required|length:2,120" v-model="bookmark.title" label="Title" type="text" />
-        <div>
-            <FormKit
-                validation="required|maxlength:255|url"
-                v-model="bookmark.url"
-                label="URL"
-                type="text"
-                placeholder="https://"
-            />
-            <button class="btn btn-sm my-2" type="button" @click="generateTitle">
-                <span v-if="!isFetchingTitle">Generate Title</span>
-                <span v-else class="loading loading-spinner"></span>
-            </button>
-        </div>
+        <FormKit
+            validation="required|maxlength:255|url"
+            v-model="bookmark.url"
+            label="URL"
+            type="text"
+            placeholder="https://"
+        />
         <FormKit validation="maxlength:255" v-model="bookmark.description" label="Description" type="text" />
         <div class="form-control w-full">
             <label class="label">
@@ -69,10 +69,19 @@ async function generateTitle() {
             </label>
             <TagPicker :picked-tags-bag="bookmark.tags" />
         </div>
-        <button type="submit" class="btn btn-primary my-3">
-            <Icon v-if="!isSending" name="ph:floppy-disk-bold" size="20" />
-            <span v-else class="loading loading-spinner"></span>
-            Save
-        </button>
+        <div class="my-3 flex space-x-2">
+            <button type="submit" class="btn btn-primary">
+                <Icon v-if="!isSending" name="ph:floppy-disk-bold" size="20" />
+                <span v-else class="loading loading-spinner"></span>
+                Save
+            </button>
+            <button class="btn flex items-center" type="button" @click="generateTitle">
+                <span v-if="!isFetchingTitle">
+                    Generate Title
+                    <Icon name="ph:lightbulb-bold" size="16" />
+                </span>
+                <span v-else class="loading loading-spinner"></span>
+            </button>
+        </div>
     </FormKit>
 </template>
