@@ -28,9 +28,9 @@ async function handleLoginAttempt(): Promise<void> {
     } catch (err: any) {
         failedAuthentication.value = true;
         failedAuthenticationFeedback.value = err.message;
+    } finally {
+        isAuthenticating.value = false;
     }
-
-    isAuthenticating.value = false;
 }
 
 function resetForm(): void {

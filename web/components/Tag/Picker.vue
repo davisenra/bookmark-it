@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { Tag, TagResponse } from "@/types/types";
+import { type Tag } from "@/types/types";
 import { useTagStore } from "@/stores/tag";
-import { onMounted } from "vue";
 
 const tagStore = useTagStore();
 const tags = tagStore.getTags();

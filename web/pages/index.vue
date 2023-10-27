@@ -20,26 +20,26 @@ const unreadBookmarksPercentage = computed(() => {
             <div class="divider my-2"></div>
             <div class="grid gap-3 md:grid-cols-2">
                 <DashboardCard>
-                    <div class="w-max rounded-full bg-primary bg-opacity-10 p-3">
+                    <div class="bg-primary w-max rounded-full bg-opacity-10 p-3">
                         <Icon name="ph:bookmark-bold" class="text-primary" size="36" />
                     </div>
                     <div>
-                        <p class="text-4xl font-extrabold text-primary">
+                        <p class="text-primary text-4xl font-extrabold">
                             {{ dashboardData.total_bookmarks }}
                         </p>
                     </div>
-                    <p class="prose-xl font-bold text-primary">Bookmarks</p>
+                    <p class="prose-xl text-primary font-bold">Bookmarks</p>
                 </DashboardCard>
                 <DashboardCard>
-                    <div class="w-max rounded-full bg-accent bg-opacity-10 p-3">
+                    <div class="bg-accent w-max rounded-full bg-opacity-10 p-3">
                         <Icon name="ph:tag-bold" class="text-accent" size="36" />
                     </div>
                     <div>
-                        <p class="text-4xl font-extrabold text-accent">
+                        <p class="text-accent text-4xl font-extrabold">
                             {{ dashboardData.total_tags }}
                         </p>
                     </div>
-                    <p class="prose-xl font-bold text-accent">Tags</p>
+                    <p class="prose-xl text-accent font-bold">Tags</p>
                 </DashboardCard>
             </div>
         </div>

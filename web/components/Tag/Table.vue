@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useTagStore } from "@/stores/tag";
-import { Tag } from "~/types/types";
+import { type Tag } from "~/types/types";
 
 const tagStore = useTagStore();
 const tags = tagStore.getTags();

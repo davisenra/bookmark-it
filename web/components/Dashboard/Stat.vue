@@ -1,18 +1,9 @@
 <script setup lang="ts">
-defineProps({
-    title: {
-        required: true,
-        type: String,
-    },
-    stat: {
-        required: true,
-        type: Number,
-    },
-    description: {
-        required: false,
-        type: String,
-    },
-});
+defineProps<{
+    title: string;
+    stat: number;
+    description?: string;
+}>();
 </script>
 <template>
     <div class="w-full rounded p-3 shadow-md">

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { Bookmark, BookmarkCollectionResponse, BookmarkResponse, Tag } from "@/types/types";
+import type { Bookmark, BookmarkCollectionResponse, BookmarkResponse, Tag } from "@/types/types";
 import { AlertType, pushAlert } from "@/composables/useAlert";
 
 export type FetchBookmarksOptions = {

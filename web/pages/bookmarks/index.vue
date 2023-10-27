@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { FetchBookmarksOptions, useBookmarkStore } from "@/stores/bookmark";
-import { BookmarkCollectionResponse } from "@/types/types";
+import { type FetchBookmarksOptions, useBookmarkStore } from "@/stores/bookmark";
+import { type BookmarkCollectionResponse } from "@/types/types";
 import { useTagStore } from "@/stores/tag";
 import { debounce } from "debounce";
 

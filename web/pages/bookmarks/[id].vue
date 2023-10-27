@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Bookmark } from "@/types/types";
+import { type Bookmark } from "@/types/types";
 import { useBookmarkStore } from "@/stores/bookmark";
 
 const route = useRoute();

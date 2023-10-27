@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CreateBookmarkPayload, useBookmarkStore } from "@/stores/bookmark";
+import { type CreateBookmarkPayload, useBookmarkStore } from "@/stores/bookmark";
 import { AlertType, pushAlert } from "@/composables/useAlert";
 
 const bookmarkStore = useBookmarkStore();
@@ -14,7 +14,7 @@ const bookmark = ref<CreateBookmarkPayload>({
 const isSending = ref(false);
 const isFetchingTitle = ref(false);
 
-async function handleBookmarkCreation(): Promise<void> {
+async function handleBookmarkCreation() {
     isSending.value = true;
 
     try {
@@ -25,9 +25,9 @@ async function handleBookmarkCreation(): Promise<void> {
             message: error.message,
             type: AlertType.ERROR,
         });
+    } finally {
+        isSending.value = false;
     }
-
-    isSending.value = false;
 }
 
 async function generateTitle() {

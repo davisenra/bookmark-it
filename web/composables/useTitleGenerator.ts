@@ -6,7 +6,7 @@ export const useTitleGenerator = async (url: string) => {
             }),
     );
 
-    if (!res.ok) {
+    if (!res?.ok) {
         return null;
     }
 

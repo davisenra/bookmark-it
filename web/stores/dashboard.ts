@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { Tag, Bookmark } from "@/types/types";
+import { type Tag, type Bookmark } from "@/types/types";
 
 export type DashboardResponse = {
     data: {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Bookmark } from "@/types/types";
+import { type Bookmark } from "@/types/types";
 import { useBookmarkStore } from "@/stores/bookmark";
 
 const bookmarkStore = useBookmarkStore();
@@ -23,7 +23,7 @@ async function handleDeleteBookmark(bookmark: Bookmark) {
 
 <template>
     <div class="mb-3 overflow-x-auto overflow-y-clip">
-        <table class="table table-xs">
+        <table class="table-xs table">
             <thead>
                 <tr>
                     <th>Title</th>
